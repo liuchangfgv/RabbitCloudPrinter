@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>歌曲播放器</title>
+  </head>
+  <body>
+    <h1>歌曲歌词</h1>
+    <audio src="a.mp3" controls></audio>
+    <script>
+      // 解析 .lyc 文件
+      function parseLyc(lycText) {
+        var lycLines = lycText.split('\n');
+        var lycData = [];
+
+        for (var i = 0; i < lycLines.length; i++) {
+          var lycLine = lycLines[i];
+
+          // 检查该行是否包含时间戳
+          if (lycLine.match(/^\[\d{2}:\d{2}\.\d{2,3}\]/)) {
+            // 提取时间戳和歌词文本
+            var timeStampEndIndex = lycLine.indexOf(']');
+            var timeStamp = lycLine.substring(1, timeStampEndIndex);
+            var lyricsText = lycLine.substring(timeStampEndIndex + 1);
+
+            // 添加时间戳和歌词文本到 lycData 数组
+            lycData.push({
+              timeStamp: parseTimeStamp(timeStamp),
+              lyricsText: lyricsText
+            });
+          }
+        }
+
+        return lycData;
+      }
+
+      // 解析时间戳
+      function parseTimeStamp(timeStamp) {
+        var timeComponents = timeStamp.substring(1, timeStamp.length - 1).split(':');
+        var minutes = parseInt(timeComponents[0]);
+        var seconds = parseFloat(timeComponents[1]);
+        var totalSeconds = minutes * 60 + seconds;
+        return totalSeconds;
+      }
+
+      // 加载 .lyc 文件
+      function loadLycFile() {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            var lycText = xhr.responseText;
+            var lycData = parseLyc(lycText);
+            displayLyrics(lycData);
+          }
+        };
+        xhr.open('GET', 'a.lyc', true);
+        xhr.send();
+      }
+
+      // 显示歌词
+      function displayLyrics(lycData) {
+      var audio = document.querySelector('audio');
+      var h1 = document.querySelector('h1');
+      var currentIndex = 0;
+
+      audio.addEventListener('timeupdate', function() {
+        var currentTime = audio.currentTime;
+        while (lycData[currentIndex + 1] && currentTime >= lycData[currentIndex + 1].timeStamp) {
+          currentIndex++;
+        }
+        if (lycData[currentIndex]) {
+          h1.innerHTML = lycData[currentIndex].lyricsText;
+        }
+      });
+
+      audio.addEventListener('ended', function() {
+        currentIndex = 0;
+        h1.innerHTML = "";
+      });
+
+      audio.addEventListener('seeked', function() {
+        currentIndex = 0;
+        var currentTime = audio.currentTime;
+        while (lycData[currentIndex + 1] && currentTime >= lycData[currentIndex + 1].timeStamp) {
+          currentIndex++;
+        }
+        if (lycData[currentIndex]) {
+          h1.innerHTML = lycData[currentIndex].lyricsText;
+        }
+      });
+    }
+
+      // 加载 .lyc 文件并显示歌词
+      loadLycFile();
+    </script>
+  </body>
+</html>
