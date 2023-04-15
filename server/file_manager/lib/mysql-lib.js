@@ -24,14 +24,17 @@ connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
 function dayi_create_tables(){
   connection.query(dayi_mysql_tables.sql_table_1, function (error,results,fields){
     if(error){console.log(error);return;}
+    console.log('[dayi-info]Table 1 created successfully')
     // console.log('The results is: ', results);
   });
   connection.query(dayi_mysql_tables.sql_table_2,function(error,results,fields){
     if(error){console.log(error);return;}
+    console.log('[dayi-info]Table 2 created successfully')
   })
 
   connection.query(dayi_mysql_tables.sql_table_3,function(error,results,fields){
     if(error){console.log(error);return;}
+    console.log('[dayi-info]Table 3 created successfully')
   })
 }
 

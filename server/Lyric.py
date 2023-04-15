@@ -4,8 +4,9 @@ import urllib.parse
 import json
 import difflib
 
-def getLyric(path):
-    tags = EasyID3(path)
+def getLyric(path): # 传入歌曲路径
+    tags = EasyID3(path) # 读取歌曲信息
+    # 调用网易云音乐API获取歌词
     url1 = 'http://s.music.163.com/search/get/?type=1&s=' + urllib.parse.quote(tags['title'][0]) + '&limit=50'
     body = {}
     try:
@@ -29,3 +30,5 @@ def getLyric(path):
     except urllib.error.URLError as e:
         return 'Error To get Lyric'
     return body['lyric'].replace("\\n", "\n").replace("\\r", "\r")
+
+
