@@ -5,3 +5,4 @@
 - upload audio file
 - download file
 - share your only mp3 with your friends
+- auto login ,without input any things
