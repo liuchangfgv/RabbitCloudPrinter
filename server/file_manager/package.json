@@ -1,0 +1,13 @@
+{
+  "name": "file_manager",
+  "version": "1.0.0",
+  "description": "process upload file",
+  "main": "index.js",
+  "author": "dayi lc",
+  "license": "MIT",
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "express": "^4.18.2",
+    "mysql": "^2.18.1"
+  }
+}
