@@ -60,6 +60,7 @@ def con_pic2pdf(allfilepath):
         newfileallpath="[error]"
     return newfileallpath
 
+# 转换
 def con_doc2pdf(allfilepath):
     # wdFormatPDF = 17
 
@@ -76,7 +77,6 @@ def con_doc2pdf(allfilepath):
 
 def con_ppt2pdf(allfilepath):
     wdFormatPDF = 32
-
     inputFile = os.path.abspath(allfilepath)
     outputFile = os.path.abspath(allfilepath+".pdf")
     powerpoint = win32com.client.Dispatch('Powerpoint.Application')
@@ -164,4 +164,4 @@ if __name__ == '__main__':
     #app.debug=True
 
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-    app.run("127.0.0.1","5050")
+    app.run("127.0.0.1","5050",debug=True)

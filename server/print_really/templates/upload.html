@@ -3,16 +3,13 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" />
-    <meta name="renderer" content="webkit" />
-    <meta name="force-rendering" content="webkit" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
+    <meta name="renderer" content="webkit">
+    <meta name="force-rendering" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Woodpecker 打印站</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/css/mdui.min.css"
         integrity="sha384-cLRrMq39HOZdvE0j6yBojO4+1PrHfB7a9l5qLcmRm/fiWXYY+CndJPmyu5FV/9Tw" crossorigin="anonymous" />
-    <title>Woodpecker 打印站</title>
-
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='print.css') }}"> -->
-    <!-- <script src="{{ url_for('static', filename='jquery-1.10.2.js') }}" type="text/javascript"></script> -->
 </head>
 
 <body class="mdui-theme-primary-pink mdui-theme-accent-pink mdui-bottom-nav-fixed">
@@ -21,101 +18,145 @@
         <div class="mdui-toolbar-spacer"></div>
         <a href="javascript:" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">refresh</i></a>
     </div>
-    
-    
-    
-    <div class="background2">
-        <div class="index">
 
-            <div class="panel2">Woodpecker</div>
-            <div class="panel2">打印站</div>
-            <div>
-                <form action="./uploader" method="POST" enctype="multipart/form-data">
-            </div>
-
-            <div><input type="text" name="filename" readonly="true" class="panel4" placeholder="当前支持超级多的格式啦"
-                    id="uplname" /></div>
-
-            <div><a href="javascript:;" class="a-upload"><input type="file" name="file" id="upl" />-选择文件-</a></div>
-            <div id="dayi_process_1"></div> <!--进度条呜呜呜呜，我整了好久先整个整个qwq-->
-            <div><a href="javascript:;" class="a-upload"><input type="submit" id="dayi_submit"
-                        value="提交" />[点击打印]芜湖起飞↗✈️</a></div>
-            <h4>当前支持更多格式啦 <br> ver.Beta 0.0029 <br>
-                支持图片很多以及各种doc docx啥的owo<br><br>
-                {{str_time|safe}}</h4>
-            <br>
-            </form>
+    <div class="mdui-container">
+        <div class="mdui-tab" mdui-tab>
+            <a href="#example6-tab1" class="mdui-ripple">
+                <i class="mdui-icon material-icons">phone</i>
+                <label>recents</label>
+            </a>
+            <a href="#example6-tab2" class="mdui-ripple">
+                <i class="mdui-icon material-icons">favorite</i>
+                <label>favorites</label>
+            </a>
+            <a href="#example6-tab3" class="mdui-ripple">
+                <i class="mdui-icon material-icons">perm_contact_calendar</i>
+                <label>nearby</label>
+            </a>
         </div>
     </div>
-    <script type="text/javascript">
-        $('#dayi_submit').click(function () {
-            document.getElementById("dayi_process_1").innerHTML = "<div class=\"mdui-progress\"><div class=\"mdui-progress-indeterminate\"></div><br></div>";
 
-        });
-
-
-
-        $(document).ready(function () {
-            $("#upl").change(function () {
-                var selname = $(this).val();
-                var str = "fakepath";
-                var hhstr = "";
-                if (selname.indexOf(str) >= 0) {
-                    hhstr = selname.substring(12, selname.length);
-                    $("#uplname").val(hhstr);
-                } else {
-                    $("#uplname").val(selname);
-                }
-            });
-        });
-    </script>
-
-
-    <div>
-
-        <h3></h3>
-        <!--感谢时雨姐姐的模板！！
-            <a href="/game/1" class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent">开始吧
-                (火灾)</a>
-                <a href="/game/2" class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent">开始吧
-                (绝对不能打开的门)</a>
-            -->
-    </div>
-    <script>
-        window.addEventListener('load', function () {
-            FastClick.attach(document.body);
-        }, false);
-    </script>
-
-    </div>
-    <div class="mdui-bottom-nav mdui-color-green-100">
-        <a href="" class="mdui-ripple mdui-bottom-nav-active">
-            <i class="mdui-icon material-icons">insert_emoticon</i>
-            <label>刷新</label>
-        </a>
-
-    </div>
-</body>
-<div class="mdui-dialog" id="message">
-    <div class="mdui-dialog-title" id="message_title">标题</div>
-    <div class="mdui-dialog-content" id="message_content">内容</div>
-    <div class="mdui-dialog-actions">
-        <button class="mdui-btn mdui-ripple" mdui-dialog-close>关闭</button>
-    </div>
-</div>
-
-<body>
+    <!-- 选择列 -->
     <div class="mdui-container">
+        <div class="mdui-row-md-4">
+            <div class="mdui-col">
+                <label class="mdui-checkbox">
+                    <input type="checkbox" />
+                    <i class="mdui-checkbox-icon"></i>
+                    默认不选中
+                </label>
+            </div>
+            <div class="mdui-col">
+                <label class="mdui-checkbox">
+                    <input type="checkbox" checked />
+                    <i class="mdui-checkbox-icon"></i>
+                    默认选中
+                </label>
+            </div>
+            <div class="mdui-col">
+                <label class="mdui-checkbox">
+                    <input type="checkbox" disabled />
+                    <i class="mdui-checkbox-icon"></i>
+                    禁用，且不选中
+                </label>
+            </div>
+            <div class="mdui-col">
+                <label class="mdui-checkbox">
+                    <input type="checkbox" disabled checked />
+                    <i class="mdui-checkbox-icon"></i>
+                    禁用，且选中
+                </label>
+            </div>
+        </div>
+        <div class="mdui-row-md-4">
+            <div class="mdui-col">
+                <label class="mdui-checkbox">
+                    <input type="checkbox" id="indeterminate-demo1" />
+                    <i class="mdui-checkbox-icon"></i>
+                    不确定状态
+                </label>
+            </div>
 
-    </div>
+            <div class="mdui-col">
+                <label class="mdui-checkbox">
+                    <input type="checkbox" disabled id="indeterminate-demo2" />
+                    <i class="mdui-checkbox-icon"></i>
+                    禁用，且不确定状态
+                </label>
+            </div>
+
+            <div class="mdui-container">
+                <div class="mdui-textfield">
+                    <h1><div >兔子云印</div></h1>
+                        <h2><div >Rabbit Remote Print</div></h2>
+                        <form action="./uploader" method="POST" enctype="multipart/form-data">
+                            <!--  -->
+                            <div><input class="mdui-textfield" type="text" name="filename" readonly="true" placeholder="当前支持超级多的格式啦" id="uplname" /></div>
+                            
+                            <!-- 选择文件 -->
+                            <div>
+                                <a href="javascript:;" class="mdui-btn mdui-btn-raised">
+                                    <input type="file" name="file" id="upl" />-选择文件-
+                                </a>
+                            </div>
+
+                            <!-- 这里是进度条 -->
+                            <div id="dayi_process_1"></div> <!--进度条呜呜呜呜，我整了好久先整个整个qwq-->
+                            <div><a href="javascript:;" class="a-upload"><input type="submit" id="dayi_submit"
+                                        value="提交" />[点击打印]芜湖起飞↗✈️</a></div>
+                            <h4>当前支持更多格式啦 <br> ver.Beta 0.0029 <br>
+                                支持图片很多以及各种doc docx啥的owo<br><br>
+                                {{str_time|safe}}</h4>
+                            <br>
+                        </form>
+                </div>
+                        
+            </div>
+
+
+            <div class="mdui-bottom-nav mdui-color-green-100">
+                <a href="" class="mdui-ripple mdui-bottom-nav-active">
+                    <i class="mdui-icon material-icons">insert_emoticon</i>
+                    <label>刷新</label>
+                </a>
+            </div>
+
+            <div class="mdui-dialog" id="message">
+                <div class="mdui-dialog-title" id="message_title">标题</div>
+                <div class="mdui-dialog-content" id="message_content">内容</div>
+                <div class="mdui-dialog-actions">
+                    <button class="mdui-btn mdui-ripple" mdui-dialog-close>关闭</button>
+                </div>
+            </div>
+
+            <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/js/mdui.min.js"
+                integrity="sha384-gCMZcshYKOGRX9r6wbDrvF+TcCCswSHFucUzUPwka+Gr+uHgjlYvkABr95TCOz3A"
+                crossorigin="anonymous"></script>
+
+            <script>
+                $(document).ready(function () {
+                    $("#upl").change(function () {
+                        var selname = $(this).val();
+                        var str = "fakepath";
+                        var hhstr = "";
+                        if (selname.indexOf(str) >= 0) {
+                            hhstr = selname.substring(12, selname.length);
+                            $("#uplname").val(hhstr);
+                        } else {
+                            $("#uplname").val(selname);
+                        }
+                    });
+                });
+
+                $('#dayi_submit').click(function () {
+                    document.getElementById("dayi_process_1").innerHTML = "<div class=\"mdui-progress\"><div class=\"mdui-progress-indeterminate\"></div><br></div>";
+                });
+
+                window.addEventListener('load', function () {
+                    FastClick.attach(document.body);
+                }, false);
+            </script>
+
 </body>
-
-<!-- MDUI JavaScript -->
-<script src="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/js/mdui.min.js"
-    integrity="sha384-gCMZcshYKOGRX9r6wbDrvF+TcCCswSHFucUzUPwka+Gr+uHgjlYvkABr95TCOz3A"
-    crossorigin="anonymous"></script>
-
-</body>
-
 
 </html>
