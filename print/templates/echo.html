@@ -1,0 +1,75 @@
+<!--感谢时雨姐姐的模板！！-->
+
+<!doctype html>
+<html lang="zh-cmn-Hans">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"/>
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <!-- MDUI CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/css/mdui.min.css"
+      integrity="sha384-cLRrMq39HOZdvE0j6yBojO4+1PrHfB7a9l5qLcmRm/fiWXYY+CndJPmyu5FV/9Tw"
+      crossorigin="anonymous"
+    />
+    <title>打印信息！</title>
+  </head>
+  <body class="mdui-theme-primary-pink mdui-theme-accent-pink mdui-bottom-nav-fixed">
+    <div class="mdui-toolbar mdui-color-green-600">
+        <a class="mdui-typo-title" style="font-family: Zpix,serif" href="/">打印信息！ - 你看到了吗？</a>
+        <div class="mdui-toolbar-spacer"></div>
+        <a href="javascript:" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">refresh</i></a>
+    </div>
+    <div id="main" style="margin: 5px">
+        
+        <div>
+            
+            <h3>{{ echo_str|safe }}</h3>
+            <!--感谢时雨姐姐的模板！！
+            <a href="/game/1" class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent">开始吧
+                (火灾)</a>
+                <a href="/game/2" class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent">开始吧
+                (绝对不能打开的门)</a>
+            -->
+        </div>
+        <h4>感谢时雨姐姐的模板</h4>
+    </div>
+    <div class="mdui-bottom-nav mdui-color-green-100">
+        <a href="./" class="mdui-ripple mdui-bottom-nav-active">
+            <i class="mdui-icon material-icons">insert_emoticon</i>
+            <label>返回</label>
+        </a>
+        
+    </div>
+    </body>
+    <div class="mdui-dialog" id="message">
+        <div class="mdui-dialog-title" id="message_title">标题</div>
+        <div class="mdui-dialog-content" id="message_content">内容</div>
+        <div class="mdui-dialog-actions">
+            <button class="mdui-btn mdui-ripple" mdui-dialog-close>关闭</button>
+        </div>
+    </div>
+
+    <body>
+        <div class="mdui-container">
+            
+        </div>
+      </body>
+
+    <!-- MDUI JavaScript -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/js/mdui.min.js"
+      integrity="sha384-gCMZcshYKOGRX9r6wbDrvF+TcCCswSHFucUzUPwka+Gr+uHgjlYvkABr95TCOz3A"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+        window.addEventListener('load', function() {
+             FastClick.attach(document.body);
+            }, false);
+    </script>
+  </body>
+</html>
