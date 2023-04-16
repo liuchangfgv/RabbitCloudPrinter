@@ -6,6 +6,7 @@ import time,random,os
 from PIL import Image
 import win32com.client
 from fpdf import FPDF
+from docx2pdf import convert as doc2pdf
 
 app = Flask(__name__)
 
@@ -60,15 +61,17 @@ def con_pic2pdf(allfilepath):
     return newfileallpath
 
 def con_doc2pdf(allfilepath):
-    wdFormatPDF = 17
+    # wdFormatPDF = 17
 
-    inputFile = os.path.abspath(allfilepath)
-    outputFile = os.path.abspath(allfilepath+".pdf")
-    word = win32com.client.Dispatch('Word.Application')
-    doc = word.Documents.Open(inputFile)
-    doc.SaveAs(outputFile, FileFormat=wdFormatPDF)
-    doc.Close()
-    word.Quit()
+    # inputFile = os.path.abspath(allfilepath)
+    # outputFile = os.path.abspath(allfilepath+".pdf")
+    # word = win32com.client.Dispatch('Word.Application')
+    # doc = word.Documents.Open(inputFile)
+    # doc.SaveAs(outputFile, FileFormat=wdFormatPDF)
+    # doc.Close()
+    # word.Quit()
+    # return allfilepath+".pdf"
+    doc2pdf(allfilepath,allfilepath+".pdf")
     return allfilepath+".pdf"
 
 def con_ppt2pdf(allfilepath):
@@ -97,10 +100,10 @@ def con_xls2pdf(allfilepath):
 def con_txt2pdf(allfilepath):
     pdf = FPDF()
     pdf.add_page()
-    pdf.set_font("Arial", size = 15)
-    f = open(allfilepath, "r")
-    for x in f:
-        pdf.cell(200, 10, txt = x, ln = 1, align = 'C')
+    pdf.set_font('Arial', '', 12)
+    with open('.bash_history', 'r') as f:
+        txt = f.read()
+    pdf.multi_cell(0, 10, txt)
     pdf.output(allfilepath+".pdf") 
     
 
