@@ -59,9 +59,9 @@ def con_pic2pdf(allfilepath):
         newfileallpath="[error]"
     return newfileallpath
 
+# 转换
 def con_doc2pdf(allfilepath):
     wdFormatPDF = 17
-
     inputFile = os.path.abspath(allfilepath)
     outputFile = os.path.abspath(allfilepath+".pdf")
     word = win32com.client.Dispatch('Word.Application')
@@ -73,7 +73,6 @@ def con_doc2pdf(allfilepath):
 
 def con_ppt2pdf(allfilepath):
     wdFormatPDF = 32
-
     inputFile = os.path.abspath(allfilepath)
     outputFile = os.path.abspath(allfilepath+".pdf")
     powerpoint = win32com.client.Dispatch('Powerpoint.Application')
