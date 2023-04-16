@@ -4,6 +4,8 @@ from werkzeug.utils import secure_filename
 from werkzeug.datastructures import  FileStorage
 import time,random,os
 from PIL import Image
+import win32com.client
+from fpdf import FPDF
 
 app = Flask(__name__)
 
@@ -34,7 +36,8 @@ def print_file(filepath):
 # 判断是否为图片
 def ispic(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1] in ALLOWED_PICS
+           filename.rsplit('.', 1)[-1] in ALLOWED_PICS
+           # fixed: 1 -> -1
 
 # 转换图片为pdf
 def con_pic2pdf(allfilepath):
@@ -56,6 +59,50 @@ def con_pic2pdf(allfilepath):
         newfileallpath="[error]"
     return newfileallpath
 
+def con_doc2pdf(allfilepath):
+    wdFormatPDF = 17
+
+    inputFile = os.path.abspath(allfilepath)
+    outputFile = os.path.abspath(allfilepath+".pdf")
+    word = win32com.client.Dispatch('Word.Application')
+    doc = word.Documents.Open(inputFile)
+    doc.SaveAs(outputFile, FileFormat=wdFormatPDF)
+    doc.Close()
+    word.Quit()
+    return allfilepath+".pdf"
+
+def con_ppt2pdf(allfilepath):
+    wdFormatPDF = 32
+
+    inputFile = os.path.abspath(allfilepath)
+    outputFile = os.path.abspath(allfilepath+".pdf")
+    powerpoint = win32com.client.Dispatch('Powerpoint.Application')
+    ppt = powerpoint.Presentations.Open(inputFile)
+    ppt.SaveAs(outputFile, FileFormat=wdFormatPDF)
+    ppt.Close()
+    powerpoint.Quit()
+    return allfilepath+".pdf"
+
+def con_xls2pdf(allfilepath):
+    inputFile = os.path.abspath(allfilepath)
+    outputFile = os.path.abspath(allfilepath+".pdf")
+    excel = win32com.client.Dispatch('Excel.Application')
+    xls = excel.Workbooks.Open(inputFile)
+    xls.WorkSheets(1).Select()
+    xls.ActiveSheet.ExportAsFixedFormat(0, outputFile)
+    xls.Close()
+    excel.Quit()
+    return allfilepath+".pdf"
+
+def con_txt2pdf(allfilepath):
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size = 15)
+    f = open(allfilepath, "r")
+    for x in f:
+        pdf.cell(200, 10, txt = x, ln = 1, align = 'C')
+    pdf.output(allfilepath+".pdf") 
+    
 
 @app.route(AUTH_key+'/uploader',methods=['GET','POST'])
 def upload_file_1():
@@ -86,6 +133,18 @@ def upload_file_1():
                     str1+="[error!!]我也不知道咋了这是，给你继续执行了吧<br>\n"
                     all_path=all_path_tmp
             
+            if all_path.split('.')[-1] in ["doc","docx"]:
+                all_path = con_doc2pdf(all_path)
+
+            if all_path.split('.')[-1] in ["ppt","pptx"]:
+                all_path = con_ppt2pdf(all_path)
+
+            if all_path.split('.')[-1] in ["xls","xlsx"]:
+                all_path = con_xls2pdf(all_path)
+
+            if all_path.split('.')[-1] == "txt":
+                all_path = con_txt2pdf(all_path)
+
             print_info=print_file(all_path)#打印
             str1+=print_info
             return render_template("echo.html",echo_str=str1)
