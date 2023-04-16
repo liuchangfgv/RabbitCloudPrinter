@@ -2,6 +2,8 @@ import os
 from flask import Flask, request, redirect, url_for, render_template
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import  FileStorage
+import time,random,os
+from PIL import Image
 
 app = Flask(__name__)
 
@@ -14,8 +16,6 @@ UPLOAD_FOLDER = 'uploads'
 
 @app.route(AUTH_key+"/")
 def upload_file():
-    import time
-    
     web_str_time="服务器时间:"+time.strftime("%Y/%m/%d %H:%M:%S", time.localtime())
     return render_template("upload.html",str_time=web_str_time)
 
@@ -23,23 +23,21 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
+# 执行打印命令,print.py [filepath]
 def print_file(filepath):
-    #filepath="C:/3.pdf"
-    import os
     run_command="python print.py "+filepath
     ex = os.popen(run_command)
     extext = ex.read()
-    #print(extext)
     ex.close()
     return extext
 
+# 判断是否为图片
 def ispic(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_PICS
 
-
+# 转换图片为pdf
 def con_pic2pdf(allfilepath):
-    import os
     newfileallpath=""
     image=allfilepath
     newfileallpath=allfilepath+".pdf"
@@ -49,7 +47,7 @@ def con_pic2pdf(allfilepath):
     #pdf.add_page()
     #pdf.image(image)
     #pdf.output(newfileallpath, "F")
-    from PIL import Image
+    
     try:
         image1 = Image.open(allfilepath)
         im1 = image1.convert('RGB')
@@ -58,10 +56,9 @@ def con_pic2pdf(allfilepath):
         newfileallpath="[error]"
     return newfileallpath
 
+
 @app.route(AUTH_key+'/uploader',methods=['GET','POST'])
 def upload_file_1():
-
-    import time,random
     if request.method == 'POST':
         file = request.files['file']
         if file and allowed_file(file.filename):
@@ -103,8 +100,6 @@ def upload_file_1():
 
 if __name__ == '__main__':
     #app.debug=True
-    
-    
 
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     app.run("127.0.0.1","5050")
