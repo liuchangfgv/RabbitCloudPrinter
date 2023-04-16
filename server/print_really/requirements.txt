@@ -10,3 +10,4 @@ pywin32==306
 Werkzeug==2.2.3
 zipp==3.15.0
 docx2pdf==0.1.8
+fpdf2==2.7.3
