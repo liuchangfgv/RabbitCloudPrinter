@@ -9,3 +9,4 @@ Pillow==9.5.0
 pywin32==306
 Werkzeug==2.2.3
 zipp==3.15.0
+docx2pdf==0.1.8

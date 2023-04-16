@@ -7,6 +7,7 @@ from PIL import Image
 import win32com.client
 from fpdf import FPDF
 from docx2pdf import convert as doc2pdf
+import fitz
 
 app = Flask(__name__)
 
@@ -59,6 +60,24 @@ def con_pic2pdf(allfilepath):
     except:
         newfileallpath="[error]"
     return newfileallpath
+
+def con2BW(allfilepath):
+    pdf = FPDF(unit = 'pt')
+    doc = fitz.open(allfilepath )
+    for i, page in enumerate(doc):
+        pix = page.get_pixmap(alpha=False)
+        img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+        gray_img = img.convert('L')
+        gray_img.save("temp/temp{}.png".format(i))
+        size = (str(pix.width),str(pix.height))
+        # pdf.add_page(size)
+        pdf.set_xy(0,0)
+        pdf.set_top_margin(0)
+        pdf.set_left_margin(0)
+        pdf.image("temp/temp{}.png".format(i))
+        os.remove("temp/temp{}.png".format(i))
+    pdf.output(allfilepath+"_BW.pdf", "F")
+
 
 # 转换
 def con_doc2pdf(allfilepath):
