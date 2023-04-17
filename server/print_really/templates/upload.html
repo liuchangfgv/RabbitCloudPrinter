@@ -87,31 +87,43 @@
 
             <div class="mdui-container">
                 <div class="mdui-textfield">
-                    <h1><div >兔子云印</div></h1>
-                        <h2><div >Rabbit Remote Print</div></h2>
-                        <form action="./uploader" method="POST" enctype="multipart/form-data">
-                            <!--  -->
-                            <div><input class="mdui-textfield" type="text" name="filename" readonly="true" placeholder="当前支持超级多的格式啦" id="uplname" /></div>
-                            
-                            <!-- 选择文件 -->
-                            <div>
-                                
-                                <a href="javascript:;" class="mdui-btn mdui-btn-raised">
-                                    <input type="file" class="mdui-btn mdui-btn-raised" />
-                                </a>
-                            </div>
+                    <h1>
+                        <div>兔子云印</div>
+                    </h1>
+                    <h2>
+                        <div>Rabbit Remote Print</div>
+                    </h2>
+                    <form action="./uploader" method="POST" enctype="multipart/form-data">
+                        <!--  -->
+                        <div><input class="mdui-textfield" type="text" name="filename" readonly="true"
+                                placeholder="当前支持超级多的格式啦" id="uplname" /></div>
 
-                            <!-- 这里是进度条 -->
-                            <div id="dayi_process_1"></div> <!--进度条呜呜呜呜，我整了好久先整个整个qwq-->
-                            <div><a href="javascript:;" class="a-upload"><input type="submit" id="dayi_submit"
-                                        value="提交" />[点击打印]芜湖起飞↗✈️</a></div>
-                            <h4>当前支持更多格式啦 <br> ver.Beta 0.0029 <br>
-                                支持图片很多以及各种doc docx啥的owo<br><br>
-                                {{str_time|safe}}</h4>
-                            <br>
-                        </form>
+                        <!-- 选择文件 -->
+                        <div>
+
+                            <a href="javascript:;" class="mdui-btn mdui-btn-raised">
+                                <input type="file" class="mdui-btn mdui-btn-raised" />
+                            </a>
+                        </div>
+
+                        <!-- 这里是进度条 -->
+                        <div id="dayi_process_1"></div> <!--进度条呜呜呜呜，我整了好久先整个整个qwq-->
+                        <div><a href="javascript:;" class="a-upload"><input type="submit" id="dayi_submit"
+                                    value="提交" />[点击打印]芜湖起飞↗✈️</a></div>
+                        <h4>当前支持更多格式啦 <br> ver.Beta 0.0029 <br>
+                            支持图片很多以及各种doc docx啥的owo<br><br>
+                            {{str_time|safe}}</h4>
+                        <br>
+                    </form>
                 </div>
-                        
+
+            </div>
+
+            <div>
+                <a>
+                    实时时间:
+                    <div id="dayi-time"></div>
+                </a>
             </div>
 
 
@@ -156,6 +168,21 @@
                 window.addEventListener('load', function () {
                     FastClick.attach(document.body);
                 }, false);
+            </script>
+
+            <script>
+                const timeDiv = document.getElementById("dayi-time");
+                setInterval(() => {
+                    fetch("./api-v2/time")
+                        .then(response => response.json())
+                        .then(data => {
+                            // console.log(data);
+                            const time = data.data[0];
+                            timeDiv.innerText = time;
+                        })
+                        .catch(error => console.error(error));
+                }, 1000);
+
             </script>
 
 </body>

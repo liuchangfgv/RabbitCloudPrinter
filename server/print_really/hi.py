@@ -1,5 +1,6 @@
 import os
 from flask import Flask, request, redirect, url_for, render_template
+from flask import jsonify
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import  FileStorage
 import time,random,os
@@ -22,6 +23,26 @@ UPLOAD_FOLDER = 'uploads'
 def upload_file():
     web_str_time="服务器时间:"+time.strftime("%Y/%m/%d %H:%M:%S", time.localtime())
     return render_template("upload.html",str_time=web_str_time)
+
+
+"""
+接口返回信息:
+{code:"201",data:["2021-03-03 19:23"]}
+#显示服务器实时时间
+"""
+
+
+@app.route(AUTH_key+"/api-v2/time", methods=['GET'])
+def api_v2_time():
+    current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    response_data = {
+        "code": "201",
+        "data": [current_time]
+    }
+    return jsonify(response_data)
+
+
+
 
 def allowed_file(filename):
     return '.' in filename and \
