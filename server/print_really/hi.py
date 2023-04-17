@@ -14,6 +14,9 @@ app = Flask(__name__)
 
 #config
 AUTH_key="/Auth_dayi_Owo_key" 
+AUTH_key="" #临时禁用AUTH_key
+
+
 ALLOWED_EXTENSIONS = set(['docx','doc','ppt','pptx','xls','xlsx','txt', 'pdf', 'jpg', 'gif', 'png', 'jpeg','bmp'])
 ALLOWED_PICS=set(['jpg', 'gif', 'png', 'jpeg','bmp'])
 UPLOAD_FOLDER = 'uploads'
