@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset="UTF-8">
 	<title>File Upload with Progress Bar</title>
@@ -11,6 +12,7 @@
 			overflow: hidden;
 			border-radius: 5px;
 		}
+
 		.progress-bar {
 			height: 100%;
 			background-color: #4caf50;
@@ -22,6 +24,7 @@
 		}
 	</style>
 </head>
+
 <body>
 	<form enctype="multipart/form-data">
 		<input type="file" name="file" id="file">
@@ -40,7 +43,7 @@
 
 			xhr.open('POST', 'api/file_upload', true);
 
-			xhr.upload.addEventListener('progress', function(event) {
+			xhr.upload.addEventListener('progress', function (event) {
 				if (event.lengthComputable) {
 					var percentComplete = (event.loaded / event.total) * 100;
 					document.getElementById('progress-bar').style.width = percentComplete + '%';
@@ -48,7 +51,7 @@
 				}
 			}, false);
 
-			xhr.onreadystatechange = function() {
+			xhr.onreadystatechange = function () {
 				if (xhr.readyState == 4 && xhr.status == 200) {
 					alert(xhr.responseText);
 				}
@@ -58,4 +61,5 @@
 		}
 	</script>
 </body>
+
 </html>
