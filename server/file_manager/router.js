@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require('fs')
 const router = express.Router();
 const cookieParser = require('cookie-parser');
-const multer  = require('multer')
+const multer = require('multer')
 
 //lib-dayi
 const mysql_lib = require('./lib/mysql-lib');
@@ -11,8 +11,8 @@ const dayi_user_manger = require('./lib/dayi-user')//用户管理
 
 //index.html
 router.get('/', function (req, res) {
-  res.writeHead(200, {'Content-Type': 'text/html'})
-  fs.readFile('index.html', 'utf-8', function(err, data) {
+  res.writeHead(200, { 'Content-Type': 'text/html' })
+  fs.readFile('index.html', 'utf-8', function (err, data) {
     if (err) {
       throw err;
     }
@@ -23,7 +23,7 @@ router.get('/', function (req, res) {
 
 
 // API-LOGIN
-router.get('/api/wanna_login',cookieParser(),async function (req,res,next){//登录
+router.get('/api/wanna_login', cookieParser(), async function (req, res, next) {//登录
   const res_raw = await dayi_login.dayi_login(req, res)
   res.setHeader("Content-Type", "application/json;charset=utf-8")
   res.write(JSON.stringify(res_raw))
@@ -33,7 +33,7 @@ router.get('/api/wanna_login',cookieParser(),async function (req,res,next){//登
 
 
 // API-GET-USER-NAME
-router.get('/api/get_user_name',cookieParser(),async function (req,res,next){
+router.get('/api/get_user_name', cookieParser(), async function (req, res, next) {
   const res_raw = await dayi_user_manger.dayi_get_user_name(req, res)
   res.setHeader("Content-Type", "application/json;charset=utf-8")
   res.write(JSON.stringify(res_raw))
@@ -44,9 +44,9 @@ router.get('/api/get_user_name',cookieParser(),async function (req,res,next){
 
 
 // HTML-upload-file
-router.get('/file-upload.html',cookieParser(),async function (req,res,next){
-  res.writeHead(200, {'Content-Type': 'text/html'})
-  fs.readFile('./html/file-upload.html', 'utf-8', function(err, data) {
+router.get('/file-upload.html', cookieParser(), async function (req, res, next) {
+  res.writeHead(200, { 'Content-Type': 'text/html' })
+  fs.readFile('./html/file-upload.html', 'utf-8', function (err, data) {
     if (err) {
       throw err;
     }
@@ -55,7 +55,7 @@ router.get('/file-upload.html',cookieParser(),async function (req,res,next){
 })
 
 //API -GET-USER-FILE -LIST
-router.get('/api/get_user_files', cookieParser(), async function(req, res, next) {
+router.get('/api/get_user_files', cookieParser(), async function (req, res, next) {
   const user_cookie = req.cookies[cookie_key];
   if (!user_cookie) {
     return res.json({ code: 401, info: '用户未登录' })
@@ -123,6 +123,31 @@ router.get('/api/download_file/:uuid', cookieParser(), async function (req, res,
   const file_name = file_info[0].file_name;
   return res.download(file_path, file_name);
 });
+
+
+//API-GET-FILE-PATH
+router.get('/api/get_file_path/:uuid', cookieParser(), async function (req, res, next) {
+  const file_uuid = req.params.uuid;
+  const user_cookie = req.cookies[cookie_key];
+  if (!user_cookie) {
+    return res.json({ code: 401, info: '用户未登录' })
+  }
+  const user_name = user_cookie;
+  // 检查用户是否存在
+  const user_exist = await mysql_lib.dayi_query_user(user_name);
+  if (!user_exist) {
+    return res.json({ code: 411, info: '用户不存在，非法操作' })
+  }
+  // 检查用户是否有权限访问该文件
+  const file_info = await mysql_lib.dayi_user_files(user_name, file_uuid);
+  if (!file_info.length) {
+    return res.json({ code: 404, info: '文件不存在或没有权限' })
+  }
+  // 返回文件路径
+  const file_path = file_info[0].file_path;
+  return res.json({ code: 201, info: '获取文件路径成功', data: { file_path } })
+})
+
 
 
 module.exports = router;
