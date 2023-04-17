@@ -33,8 +33,6 @@ def upload_file():
 {code:"201",data:["2021-03-03 19:23"]}
 #显示服务器实时时间
 """
-
-
 @app.route(AUTH_key+"/api-v2/time", methods=['GET'])
 def api_v2_time():
     current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
@@ -44,6 +42,14 @@ def api_v2_time():
     }
     return jsonify(response_data)
 
+
+"""
+JSON 格式表单接收
+{code:"201",info:"前端传递的数据",data:{filename:"文件名",filepath:"文件路径",...}}
+"""
+@app.route(AUTH_key+"/api-v2/post_json", methods=['POST'])
+def json_form_accept():
+  print(request.json)
 
 
 

@@ -27,4 +27,5 @@ async function get_user_name(req, res, next) {
   return res.json(res_info);
 }
 
-exports.get_user_name= this.get_user_name
+exports.get_user_name= get_user_name
+exports.dayi_get_user_name= get_user_name
