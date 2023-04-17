@@ -108,6 +108,7 @@ def con2BW(allfilepath):
         pdf.image("temp{}.png".format(i))
         os.remove("temp{}.png".format(i))
     pdf.output(allfilepath+"_BW.pdf", "F")
+    os.remove(allfilepath)
     return allfilepath+"_BW.pdf"
 
 
@@ -124,6 +125,7 @@ def con_doc2pdf(allfilepath):
     # word.Quit()
     # return allfilepath+".pdf"
     doc2pdf(allfilepath,allfilepath+".pdf")
+    os.remove(allfilepath)
     return allfilepath+".pdf"
 
 # 暂不可用
@@ -157,7 +159,9 @@ def con_txt2pdf(allfilepath):
     with open('.bash_history', 'r') as f:
         txt = f.read()
     pdf.multi_cell(0, 10, txt)
-    pdf.output(allfilepath+".pdf") 
+    pdf.output(allfilepath+".pdf")
+    os.remove(allfilepath)
+    return allfilepath+".pdf"
     
 
 @app.route(AUTH_key+'/uploader',methods=['GET','POST'])
@@ -202,14 +206,22 @@ def upload_file_1():
             if all_path.split('.')[-1] == "txt":
                 all_path = con_txt2pdf(all_path)
 
-            if request.form.get("bw"):
+            if request.form.get("blackAndWhitePrinting"):
                 str1 += "正在将文档转化为黑白<br\n>"
                 if all_path.split('.')[-1] != "pdf":
                     str1 += "你上传的格式暂时不支持黑白打印，已经跳过文档处理<br>\n"
                 else:
                     all_path = con2BW(all_path)
 
+            if not request.form.get("printAllPages"):
+                pass
+                # 页码选择
+
             print_info=print_file(all_path)#打印
+
+            if request.form.get("deleteAfterPrinting"):
+                os.remove(all_path)
+
             str1+=print_info
             return render_template("echo.html",echo_str=str1)
         else:
