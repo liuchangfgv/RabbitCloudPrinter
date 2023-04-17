@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 from werkzeug.datastructures import  FileStorage
 import time,random,os
 from PIL import Image
-import win32com.client
+# import win32com.client
 from fpdf import FPDF
 from docx2pdf import convert as doc2pdf
 import fitz
@@ -82,6 +82,7 @@ def con_pic2pdf(allfilepath):
         newfileallpath="[error]"
     return newfileallpath
 
+# 将文档转化为黑白色
 def con2BW(allfilepath):
     pdf = FPDF(unit = 'pt')
     doc = fitz.open(allfilepath )
@@ -98,6 +99,7 @@ def con2BW(allfilepath):
         pdf.image("temp{}.png".format(i))
         os.remove("temp{}.png".format(i))
     pdf.output(allfilepath+"_BW.pdf", "F")
+    return allfilepath+"_BW.pdf"
 
 
 # 转换
@@ -115,27 +117,29 @@ def con_doc2pdf(allfilepath):
     doc2pdf(allfilepath,allfilepath+".pdf")
     return allfilepath+".pdf"
 
-def con_ppt2pdf(allfilepath):
-    wdFormatPDF = 32
-    inputFile = os.path.abspath(allfilepath)
-    outputFile = os.path.abspath(allfilepath+".pdf")
-    powerpoint = win32com.client.Dispatch('Powerpoint.Application')
-    ppt = powerpoint.Presentations.Open(inputFile)
-    ppt.SaveAs(outputFile, FileFormat=wdFormatPDF)
-    ppt.Close()
-    powerpoint.Quit()
-    return allfilepath+".pdf"
+# 暂不可用
+# def con_ppt2pdf(allfilepath):
+#     wdFormatPDF = 32
+#     inputFile = os.path.abspath(allfilepath)
+#     outputFile = os.path.abspath(allfilepath+".pdf")
+#     powerpoint = win32com.client.Dispatch('Powerpoint.Application')
+#     ppt = powerpoint.Presentations.Open(inputFile)
+#     ppt.SaveAs(outputFile, FileFormat=wdFormatPDF)
+#     ppt.Close()
+#     powerpoint.Quit()
+#     return allfilepath+".pdf"
 
-def con_xls2pdf(allfilepath):
-    inputFile = os.path.abspath(allfilepath)
-    outputFile = os.path.abspath(allfilepath+".pdf")
-    excel = win32com.client.Dispatch('Excel.Application')
-    xls = excel.Workbooks.Open(inputFile)
-    xls.WorkSheets(1).Select()
-    xls.ActiveSheet.ExportAsFixedFormat(0, outputFile)
-    xls.Close()
-    excel.Quit()
-    return allfilepath+".pdf"
+# # 暂不可用
+# def con_xls2pdf(allfilepath):
+#     inputFile = os.path.abspath(allfilepath)
+#     outputFile = os.path.abspath(allfilepath+".pdf")
+#     excel = win32com.client.Dispatch('Excel.Application')
+#     xls = excel.Workbooks.Open(inputFile)
+#     xls.WorkSheets(1).Select()
+#     xls.ActiveSheet.ExportAsFixedFormat(0, outputFile)
+#     xls.Close()
+#     excel.Quit()
+#     return allfilepath+".pdf"
 
 def con_txt2pdf(allfilepath):
     pdf = FPDF()
@@ -179,14 +183,22 @@ def upload_file_1():
             if all_path.split('.')[-1] in ["doc","docx"]:
                 all_path = con_doc2pdf(all_path)
 
-            if all_path.split('.')[-1] in ["ppt","pptx"]:
-                all_path = con_ppt2pdf(all_path)
+            # if all_path.split('.')[-1] in ["ppt","pptx"]:
+            #     all_path = con_ppt2pdf(all_path)
 
-            if all_path.split('.')[-1] in ["xls","xlsx"]:
-                all_path = con_xls2pdf(all_path)
+            # if all_path.split('.')[-1] in ["xls","xlsx"]:
+            #     all_path = con_xls2pdf(all_path)
+            # 暂时还没实现
 
             if all_path.split('.')[-1] == "txt":
                 all_path = con_txt2pdf(all_path)
+
+            if request.form.get("bw"):
+                str1 += "正在将文档转化为黑白<br\n>"
+                if all_path.split('.')[-1] != "pdf":
+                    str1 += "你上传的格式暂时不支持黑白打印，已经跳过文档处理<br>\n"
+                else:
+                    all_path = con2BW(all_path)
 
             print_info=print_file(all_path)#打印
             str1+=print_info
