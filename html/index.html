@@ -479,6 +479,8 @@ selected_file_Btn.addEventListener('click', () => {
     <div class="mdui-container Custom-class-1" style="padding-top:50px;">
       <div class="mdui-textfield">
         <div>
+          <a>实时打印信息:</a>
+          <div id="print-info">获取中...</div>
           <a class="Custom-class-1">
             <div>python服务器实时时间:</div>
             <div id="dayi-time">正在获取时间...</div>
@@ -541,8 +543,6 @@ selected_file_Btn.addEventListener('click', () => {
     <div class="mdui-container">
       <div class="mdui-textfield">
     <div>
-        <h1>Real-time Print Info</h1>
-      <div id="print-info"></div>
       <script>
           // 定义请求 API 的函数
           function getPrintInfo() {
@@ -565,8 +565,8 @@ selected_file_Btn.addEventListener('click', () => {
               xhr.open("GET", "/api-v2/realtime-print-info", true);
               xhr.send();
           }
-          // 每 5 秒钟请求一次 API
-          setInterval(getPrintInfo, 5000);
+          // 每 2 秒钟请求一次 API
+          setInterval(getPrintInfo, 2000);
     </script>
     </div></div></div>
     
