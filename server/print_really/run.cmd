@@ -1,3 +1,3 @@
-npm i -g yarn
-yarn install
-yarn start
+pip install pdm
+pdm install
+pdm run hi.py

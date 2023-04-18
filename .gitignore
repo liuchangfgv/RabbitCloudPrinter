@@ -8,3 +8,4 @@ server/print_really/uploads/
 *.pptx
 
 node_modules/*
+server/print_really/.venv/*

@@ -6,9 +6,9 @@ from werkzeug.datastructures import  FileStorage
 import time,random,os
 from PIL import Image
 # import win32com.client
-from fpdf import FPDF
+# from fpdf import FPDF
 from docx2pdf import convert as doc2pdf
-import fitz
+# import fitz
 
 app = Flask(__name__)
 
@@ -93,22 +93,6 @@ def con_pic2pdf(allfilepath):
 
 # 将文档转化为黑白色
 def con2BW(allfilepath):
-    # pdf = FPDF(unit = 'pt')
-    # doc = fitz.open(allfilepath )
-    # for i, page in enumerate(doc):
-    #     pix = page.get_pixmap(alpha=False)
-    #     img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
-    #     gray_img = img.convert('L')
-    #     gray_img.save("temp{}.png".format(i))
-    #     size = (float(pix.width),float(pix.height))
-    #     pdf.add_page(format = size)
-    #     pdf.set_xy(0,0)
-    #     pdf.set_top_margin(0)
-    #     pdf.set_left_margin(0)
-    #     pdf.image("temp{}.png".format(i))
-    #     os.remove("temp{}.png".format(i))
-    # pdf.output(allfilepath+"_BW.pdf", "F")
-    # F**k you fpdf
     exe = os.popen('convert -density 300 {} -type Grayscale {}'.format(allfilepath,allfilepath+"_BW.pdf"))
     if exe.read() != '':
         return 'Error'
@@ -159,16 +143,33 @@ def con_doc2pdf(allfilepath):
 #     excel.Quit()
 #     return allfilepath+".pdf"
 
+
+# convert txt to pdf
 def con_txt2pdf(allfilepath):
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font('Arial', '', 12)
-    with open('.bash_history', 'r') as f:
-        txt = f.read()
-    pdf.multi_cell(0, 10, txt)
-    pdf.output(allfilepath+".pdf")
-    os.remove(allfilepath)
+    # pdf = FPDF(unit = 'pt')
+    # doc = fitz.open(allfilepath )
+    # for i, page in enumerate(doc):
+    #     pix = page.get_pixmap(alpha=False)
+    #     img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+    #     img.save("temp{}.png".format(i))
+    #     size = (float(pix.width),float(pix.height))
+    #     pdf.add_page(format = size)
+    #     pdf.set_xy(0,0)
+    #     pdf.set_top_margin(0)
+    #     pdf.set_left_margin(0)
+    #     pdf.image("temp{}.png".format(i))
+    #     os.remove("temp{}.png".format(i))
+    # pdf.output(allfilepath+".pdf", "F")
+    # F**k you fpdf
+    exe = os.popen('convert -density 300 {} {}'.format(allfilepath,allfilepath+".pdf"))
+    if exe.read() != '':
+        return 'Error'
+    try:
+        os.remove(allfilepath)
+    except:
+        pass
     return allfilepath+".pdf"
+    return
     
 
 @app.route(AUTH_key+'/uploader',methods=['GET','POST'])
