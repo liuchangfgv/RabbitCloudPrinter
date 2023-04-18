@@ -14,6 +14,8 @@
 
     <!-- 新的UI框架 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic">
+
+    
 </head>
 
 <body class="mdui-theme-primary-pink mdui-theme-accent-pink mdui-bottom-nav-fixed">
@@ -23,233 +25,55 @@
         <a href="javascript:" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">refresh</i></a>
     </div>
 
-    <!-- 文件管理: -->
+<!-- 文件管理: -->
+<!-- <iframe src="file_manger.html" height="100%" width="100%" scrolling="no" frameborder="0"> -->
     <div class="mdui-container">
         <div class="mdui-textfield">
+    <h1>文件管理系统</h1>
     <div>
-        <h1>文件管理系统</h1>
-  <div>
-    <p>当前用户：<span id="user-name"></span></p>
-    <button id="login-button">登录</button>
-  </div>
-  <hr>
-  <h2>上传文件</h2>
-  <form enctype="multipart/form-data">
-    <input type="file" name="file"><br>
-    <button id="auto-upload-button">自动上传</button>
-    <button id="manual-upload-button">手动上传</button>
-  </form>
-
-  <!-- 日志信息 -->
-  <textarea id="log" rows="10" cols="50"></textarea>
-
-
-  <!-- 上传进度条 -->
-  <div id="progress-div" style="display: none;">
-    <div id="progress-bar" style="background-color: #4CAF50; height: 20px; width: 0%;"></div>
-  </div>
-
-  <!-- 文件列表 -->
-  <hr>
-  <h2>文件列表</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>文件名</th>
-        <th>大小</th>
-        <th>路径</th>
-        <th>文件UUID</th>
-
-        <th>操作</th>
-        <th>操作</th>
-
-
-      </tr>
-    </thead>
-    <tbody id="file-list">
-    </tbody>
-  </table>
-
-  <hr>
-  <script>
-    // 获取当前用户
-    fetch('/api/wanna_login', { credentials: 'include' })
-      .then(response => response.json())
-      .then(data => {
-        if (data.code == 201) {
-          document.getElementById('user-name').innerText = data.logged_in_user_name;
-        }
-        if (data.code == 401) {
-          document.getElementById('user-name').innerText = data.logged_in_user_name;
-        }
-        else {
-          console.log("[dayi-error]获得用户出现错误")
-          console.log(data.info);
-        }
-      });
-
-    // 登录按钮点击事件
-    document.getElementById('login-button').addEventListener('click', (event) => {
-      event.preventDefault();
-      fetch('/api/wanna_login', { credentials: 'include' })
-        .then(response => response.json())
-        .then(data => {
-          if (data.code === 200) {
-            document.getElementById('user-name').innerText = data.data;
-          } else {
-            alert(data.info);
-          }
-        });
-    });
-
-
-    // // 获取用户文件列表
-    // function fetchUserFiles() {
-    //   fetch('/api/get_user_files', { credentials: 'include' })
-    //     .then(response => response.json())
-    //     .then(data => {
-    //       if (data.code == 201) {
-    //         const fileList = document.getElementById('file-list')
-    //         fileList.innerHTML = ''
-    //         const files = data.data
-    //         files.forEach(file => {
-    //           const row = document.createElement('tr')
-    //           const sizeCell = document.createElement('td')
-    //           sizeCell.innerText = formatFileSize(file.file_size)
-    //           const pathCell = document.createElement('td')
-    //           pathCell.innerText = file.file_path
-    //           const uuidCell = document.createElement('td')
-    //           uuidCell.innerText = file.uuid
-    //           const deleteCell = document.createElement('td')
-    //           const deleteBtn = document.createElement('button')
-    //           deleteBtn.innerText = '删除'
-    //           deleteBtn.classList.add('btn', 'btn-danger')
-    //           deleteBtn.addEventListener('click', () => {
-    //             deleteFile(file.uuid)
-    //           })
-    //           deleteCell.appendChild(deleteBtn)
-    //           row.appendChild(sizeCell)
-    //           row.appendChild(pathCell)
-    //           row.appendChild(uuidCell)
-    //           row.appendChild(deleteCell)
-    //           fileList.appendChild(row)
-    //         })
-    //       } else if (data.code == 401) {
-    //         console.log('[dayi-error]用户未登录')
-    //         // 用户未登录，跳转到登录页面
-    //         // window.location.replace('/login.html')
-    //       } else {
-    //         alert(data.info)
-    //       }
-    //     })
-    //     .catch(error => console.error(error))
-    // }
-    // 获取用户文件列表
-    function fetchUserFiles() {
-      fetch('/api/get_user_files', { credentials: 'include' })
-        .then(response => response.json())
-        .then(data => {
-          if (data.code == 201) {
-            const fileList = document.getElementById('file-list')
-            fileList.innerHTML = ''
-            const files = data.data
-            files.forEach(file => {
-              const row = document.createElement('tr')
-              const sizeCell = document.createElement('td')
-              sizeCell.innerText = formatFileSize(file.file_size)
-              const pathCell = document.createElement('td')
-              pathCell.innerText = file.file_path
-              const uuidCell = document.createElement('td')
-              uuidCell.innerText = file.uuid
-              const downloadCell = document.createElement('td')
-              const downloadBtn = document.createElement('button')
-              downloadBtn.innerText = '下载'
-              downloadBtn.classList.add('btn', 'btn-primary')
-              downloadBtn.addEventListener('click', () => {
-                downloadFile(file.uuid)
-              })
-              downloadCell.appendChild(downloadBtn)
-
-              //删除按钮
-              const deleteCell = document.createElement('td')
-              const deleteBtn = document.createElement('button')
-              deleteBtn.innerText = '删除'
-              deleteBtn.classList.add('btn', 'btn-danger')
-              deleteBtn.addEventListener('click', () => {
-                deleteFile(file.uuid)
-              })
-              deleteCell.appendChild(deleteBtn)
-
-              //文件名
-              const filenameCell = document.createElement('td')
-              filenameCell.innerText = file.file_name
-
-
-              row.appendChild(filenameCell)
-              row.appendChild(sizeCell)
-              row.appendChild(pathCell)
-              row.appendChild(uuidCell)
-
-              row.appendChild(downloadCell)
-              row.appendChild(deleteCell)
-              fileList.appendChild(row)
-            })
-          } else if (data.code == 401) {
-            console.log('[dayi-error]用户未登录')
-            // 用户未登录，跳转到登录页面
-            // window.location.replace('/login.html')
-          } else {
-            alert(data.info)
-          }
-        })
-        .catch(error => console.error(error))
-    }
-
-    // 下载文件
-    function downloadFile(uuid) {
-      window.location.href = '/api/download_file/' + uuid;
-    }
-
-
-
-
-
-    // 格式化文件大小
-    function formatFileSize(size) {
-      if (size < 1024) {
-        return size + ' B'
-      } else if (size < 1024 * 1024) {
-        return (size / 1024).toFixed(2) + ' KB'
-      } else {
-        return (size / (1024 * 1024)).toFixed(2) + ' MB'
-      }
-    }
-
-    // 删除文件
-    function deleteFile(uuid) {
-      if (!confirm('确定要删除该文件吗？')) {
-        return
-      }
-      fetch('/api/delete_file/' + uuid, {
-        credentials: 'include'
-      })
-        .then(response => response.json())
-        .then(data => {
-          if (data.code == 201) {
-            fetchUserFiles()
-          } else if (data.code == 401) {
-            console.log('[dayi-error]错误')
-            console.log(data)
-            // window.location.replace('/login.html')
-          } else {
-            alert(data.info)
-          }
-        })
-        .catch(error => console.error(error))
-    }
-
-    // 页面加载完成时获取用户文件列表
-    window.onload = function () {
+      <p>当前用户：<span id="user-name"></span></p>
+      <button id="login-button">登录</button>
+    </div>
+    <hr>
+    <h2>上传文件</h2>
+    <form enctype="multipart/form-data">
+      <input type="file" name="file"><br>
+      <button id="auto-upload-button">自动上传</button>
+      <button id="manual-upload-button">手动上传</button>
+    </form>
+  
+    <!-- 日志信息 -->
+    <textarea id="log" rows="10" cols="50"></textarea>
+  
+  
+    <!-- 上传进度条 -->
+    <div id="progress-div" style="display: none;">
+      <div id="progress-bar" style="background-color: #4CAF50; height: 20px; width: 0%;"></div>
+    </div>
+  
+    <!-- 文件列表 -->
+    <hr>
+    <h2>文件列表</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>文件名</th>
+          <th>大小</th>
+          <th>路径</th>
+          <th>文件UUID</th>
+  
+          <th>操作</th>
+          <th>操作</th>
+  
+  
+        </tr>
+      </thead>
+      <tbody id="file-list">
+      </tbody>
+    </table>
+  
+    <hr>
+    <script>
       // 获取当前用户
       fetch('/api/wanna_login', { credentials: 'include' })
         .then(response => response.json())
@@ -259,128 +83,312 @@
           }
           if (data.code == 401) {
             document.getElementById('user-name').innerText = data.logged_in_user_name;
-          } else {
+          }
+          else {
             console.log("[dayi-error]获得用户出现错误")
             console.log(data.info);
           }
         });
-
-      // 获得用户名
-      const userLabel = document.getElementById('user-label')
-      fetch('/api/get_user_name', { credentials: 'include' })
-        .then(response => response.json())
-        .then(data => {
-          if (data.code == 201 || data.code == 401) {
-            userLabel.innerText = '当前用户：' + data.user_namel;
-            fetchUserFiles();
-          } else {
-            alert(data.info)
-          }
-        })
-        .catch(error => console.error(error))
-
-      // 页面加载完成时获取用户文件列表
-      fetchUserFiles()
-    }
-
-
-
-
-
-    //上传文件函数
-    function uploadFile(formData) {
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST', '/api/file_upload', true);
-      xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-
-      const progressDiv = document.getElementById('progress-div');
-      const progressBar = document.getElementById('progress-bar');
-      progressDiv.style.display = 'block';
-      progressBar.style.width = '0%';
-
-      xhr.upload.addEventListener('progress', (event) => {
-        if (event.lengthComputable) {
-          const percent = (event.loaded / event.total) * 100;
-          progressBar.style.width = `${percent}%`;
-        }
+  
+      // 登录按钮点击事件
+      document.getElementById('login-button').addEventListener('click', (event) => {
+        event.preventDefault();
+        fetch('/api/wanna_login', { credentials: 'include' })
+          .then(response => response.json())
+          .then(data => {
+            if (data.code === 200) {
+              document.getElementById('user-name').innerText = data.data;
+            } else {
+              alert(data.info);
+            }
+          });
       });
-
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
+  
+  
+      // // 获取用户文件列表
+      // function fetchUserFiles() {
+      //   fetch('/api/get_user_files', { credentials: 'include' })
+      //     .then(response => response.json())
+      //     .then(data => {
+      //       if (data.code == 201) {
+      //         const fileList = document.getElementById('file-list')
+      //         fileList.innerHTML = ''
+      //         const files = data.data
+      //         files.forEach(file => {
+      //           const row = document.createElement('tr')
+      //           const sizeCell = document.createElement('td')
+      //           sizeCell.innerText = formatFileSize(file.file_size)
+      //           const pathCell = document.createElement('td')
+      //           pathCell.innerText = file.file_path
+      //           const uuidCell = document.createElement('td')
+      //           uuidCell.innerText = file.uuid
+      //           const deleteCell = document.createElement('td')
+      //           const deleteBtn = document.createElement('button')
+      //           deleteBtn.innerText = '删除'
+      //           deleteBtn.classList.add('btn', 'btn-danger')
+      //           deleteBtn.addEventListener('click', () => {
+      //             deleteFile(file.uuid)
+      //           })
+      //           deleteCell.appendChild(deleteBtn)
+      //           row.appendChild(sizeCell)
+      //           row.appendChild(pathCell)
+      //           row.appendChild(uuidCell)
+      //           row.appendChild(deleteCell)
+      //           fileList.appendChild(row)
+      //         })
+      //       } else if (data.code == 401) {
+      //         console.log('[dayi-error]用户未登录')
+      //         // 用户未登录，跳转到登录页面
+      //         // window.location.replace('/login.html')
+      //       } else {
+      //         alert(data.info)
+      //       }
+      //     })
+      //     .catch(error => console.error(error))
+      // }
+      // 获取用户文件列表
+      function fetchUserFiles() {
+        fetch('/api/get_user_files', { credentials: 'include' })
+          .then(response => response.json())
+          .then(data => {
+            if (data.code == 201) {
+              const fileList = document.getElementById('file-list')
+              fileList.innerHTML = ''
+              const files = data.data
+              files.forEach(file => {
+                const row = document.createElement('tr')
+                const sizeCell = document.createElement('td')
+                sizeCell.innerText = formatFileSize(file.file_size)
+                const pathCell = document.createElement('td')
+                pathCell.innerText = file.file_path
+                const uuidCell = document.createElement('td')
+                uuidCell.innerText = file.uuid
+                const downloadCell = document.createElement('td')
+                const downloadBtn = document.createElement('button')
+                downloadBtn.innerText = '下载'
+                downloadBtn.classList.add('btn', 'btn-primary')
+                downloadBtn.addEventListener('click', () => {
+                  downloadFile(file.uuid)
+                })
+                downloadCell.appendChild(downloadBtn)
+  
+                //删除按钮
+                const deleteCell = document.createElement('td')
+                const deleteBtn = document.createElement('button')
+                deleteBtn.innerText = '删除'
+                deleteBtn.classList.add('btn', 'btn-danger')
+                deleteBtn.addEventListener('click', () => {
+                  deleteFile(file.uuid)
+                })
+                deleteCell.appendChild(deleteBtn)
+  
+                //文件名
+                const filenameCell = document.createElement('td')
+                filenameCell.innerText = file.file_name
+  
+  
+                row.appendChild(filenameCell)
+                row.appendChild(sizeCell)
+                row.appendChild(pathCell)
+                row.appendChild(uuidCell)
+  
+                row.appendChild(downloadCell)
+                row.appendChild(deleteCell)
+                fileList.appendChild(row)
+              })
+            } else if (data.code == 401) {
+              console.log('[dayi-error]用户未登录')
+              // 用户未登录，跳转到登录页面
+              // window.location.replace('/login.html')
+            } else {
+              alert(data.info)
+            }
+          })
+          .catch(error => console.error(error))
+      }
+  
+      // 下载文件
+      function downloadFile(uuid) {
+        window.location.href = '/api/download_file/' + uuid;
+      }
+  
+  
+  
+  
+  
+      // 格式化文件大小
+      function formatFileSize(size) {
+        if (size < 1024) {
+          return size + ' B'
+        } else if (size < 1024 * 1024) {
+          return (size / 1024).toFixed(2) + ' KB'
+        } else {
+          return (size / (1024 * 1024)).toFixed(2) + ' MB'
+        }
+      }
+  
+      // 删除文件
+      function deleteFile(uuid) {
+        if (!confirm('确定要删除该文件吗？')) {
+          return
+        }
+        fetch('/api/delete_file/' + uuid, {
+          credentials: 'include'
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.code == 201) {
+              fetchUserFiles()
+            } else if (data.code == 401) {
+              console.log('[dayi-error]错误')
+              console.log(data)
+              // window.location.replace('/login.html')
+            } else {
+              alert(data.info)
+            }
+          })
+          .catch(error => console.error(error))
+      }
+  
+      // 页面加载完成时获取用户文件列表
+      window.onload = function () {
+        // 获取当前用户
+        fetch('/api/wanna_login', { credentials: 'include' })
+          .then(response => response.json())
+          .then(data => {
+            if (data.code == 201) {
+              document.getElementById('user-name').innerText = data.logged_in_user_name;
+            }
+            if (data.code == 401) {
+              document.getElementById('user-name').innerText = data.logged_in_user_name;
+            } else {
+              console.log("[dayi-error]获得用户出现错误")
+              console.log(data.info);
+            }
+          });
+  
+        // 获得用户名
+        const userLabel = document.getElementById('user-label')
+        fetch('/api/get_user_name', { credentials: 'include' })
+          .then(response => response.json())
+          .then(data => {
+            if (data.code == 201 || data.code == 401) {
+              userLabel.innerText = '当前用户：' + data.user_namel;
+              fetchUserFiles();
+            } else {
+              alert(data.info)
+            }
+          })
+          .catch(error => console.error(error))
+  
+        // 页面加载完成时获取用户文件列表
+        fetchUserFiles()
+      }
+  
+  
+  
+  
+  
+      //上传文件函数
+      function uploadFile(formData) {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api/file_upload', true);
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+  
+        const progressDiv = document.getElementById('progress-div');
+        const progressBar = document.getElementById('progress-bar');
+        progressDiv.style.display = 'block';
+        progressBar.style.width = '0%';
+  
+        xhr.upload.addEventListener('progress', (event) => {
+          if (event.lengthComputable) {
+            const percent = (event.loaded / event.total) * 100;
+            progressBar.style.width = `${percent}%`;
+          }
+        });
+  
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            if (response.code == 201) {
+              console.log('[dayi-info]上传成功');
+              fetchUserFiles();
+            } else {
+              console.error(`[dayi-error]${JSON.stringify(response)}`);
+              alert(`上传失败,错误信息: JSON.stringify(response)`);
+            }
+          }
+          fetchUserFiles();
+        };
+  
+        xhr.send(formData);
+      }
+  
+  
+  
+  
+      //上传按钮
+      document.getElementById('manual-upload-button').addEventListener('click', (event) => {
+        event.preventDefault();
+        const fileInput = document.querySelector('input[type="file"]');
+        const file = fileInput.files[0];
+        const formData = new FormData();
+        formData.append('file', file);
+        uploadFile(formData);
+      });
+  
+  
+    </script>
+  
+    <script>
+      // 日志信息
+      const logTextarea = document.getElementById('log');
+  
+      function log(message) {
+        logTextarea.value += message + '\n';
+      }
+      function uploadFile(formData) {
+        const xhr = new XMLHttpRequest();
+        xhr.upload.addEventListener('progress', handleProgress);
+        xhr.addEventListener('load', handleLoad);
+        xhr.addEventListener('error', handleError);
+        xhr.addEventListener('abort', handleAbort);
+  
+        xhr.open('POST', '/api/file_upload');
+        xhr.send(formData);
+  
+        function handleProgress(event) {
+          const percent = event.loaded / event.total * 100;
+          log(`上传进度：${percent.toFixed(2)}%`);
+        }
+  
+        function handleLoad(event) {
           const response = JSON.parse(xhr.responseText);
           if (response.code == 201) {
-            console.log('[dayi-info]上传成功');
-            fetchUserFiles();
+            log('上传成功');
           } else {
-            console.error(`[dayi-error]${JSON.stringify(response)}`);
-            alert(`上传失败,错误信息: JSON.stringify(response)`);
+            log(`上传失败：${response.info}`);
           }
+          fetchUserFiles();
         }
-        fetchUserFiles();
-      };
-
-      xhr.send(formData);
-    }
-
-
-
-
-    //上传按钮
-    document.getElementById('manual-upload-button').addEventListener('click', (event) => {
-      event.preventDefault();
-      const fileInput = document.querySelector('input[type="file"]');
-      const file = fileInput.files[0];
-      const formData = new FormData();
-      formData.append('file', file);
-      uploadFile(formData);
-    });
-
-
-  </script>
-
-  <script>
-    // 日志信息
-    const logTextarea = document.getElementById('log');
-
-    function log(message) {
-      logTextarea.value += message + '\n';
-    }
-    function uploadFile(formData) {
-      const xhr = new XMLHttpRequest();
-      xhr.upload.addEventListener('progress', handleProgress);
-      xhr.addEventListener('load', handleLoad);
-      xhr.addEventListener('error', handleError);
-      xhr.addEventListener('abort', handleAbort);
-
-      xhr.open('POST', '/api/file_upload');
-      xhr.send(formData);
-
-      function handleProgress(event) {
-        const percent = event.loaded / event.total * 100;
-        log(`上传进度：${percent.toFixed(2)}%`);
-      }
-
-      function handleLoad(event) {
-        const response = JSON.parse(xhr.responseText);
-        if (response.code == 201) {
-          log('上传成功');
-        } else {
-          log(`上传失败：${response.info}`);
+  
+        function handleError(event) {
+          log('上传出错');
         }
-        fetchUserFiles();
+  
+        function handleAbort(event) {
+          log('上传已取消');
+        }
       }
+  
+    </script>
 
-      function handleError(event) {
-        log('上传出错');
-      }
+<!-- </iframe> -->
+        </div></div>
+</script>
 
-      function handleAbort(event) {
-        log('上传已取消');
-      }
-    }
-
-  </script>
-    </div></div></div>
+<div id="header"></div>
+<!-- 文件管理: -->
 <!-- 文件管理: -->
 
     <div class="mdui-container">
