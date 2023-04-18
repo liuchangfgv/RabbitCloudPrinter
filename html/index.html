@@ -97,11 +97,12 @@
       您选择了:<div id="selected-file-uuid"></div>
       <script>
         var selectedUUID  = "";
+        var selectedFilePath = "";
       </script>
 
       <script>
         const chooseFileButton = document.getElementById('choose-file-button');
-        const selectedFileInfo = document.getElementById('selected-file-info');
+        //const selectedFileInfo = document.getElementById('selected-file-info');
 
         // 监听按钮的点击事件
         chooseFileButton.addEventListener('click', () => {
@@ -211,8 +212,9 @@ selected_file_Btn.classList.add('btn', 'btn-info')
 selected_file_Btn.addEventListener('click', () => {
 
   selectedUUID = file.uuid
+  selectedFilePath = file.file_path
   //显示当前的UUID
-  document.getElementById("selected-file-uuid").innerText = selectedUUID
+  document.getElementById("selected-file-uuid").innerText = selectedUUID+"\n文件路径:"+selectedFilePath;
 
   console.log(selectedUUID)
 })
@@ -513,6 +515,8 @@ selected_file_Btn.addEventListener('click', () => {
           jsonData[key] = value;
         }
         jsonData['file'] = selectedUUID;
+        jsonData['file_path'] = selectedFilePath;
+
 
         console.log(jsonData);
         
