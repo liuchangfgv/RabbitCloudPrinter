@@ -534,10 +534,14 @@ selected_file_Btn.addEventListener('click', () => {
           if (!response.ok) {
             throw new Error(response.statusText);
           }
+
+          
           return response.json();
         }).then(data => {
+          alert(JSON.stringify(data))
           console.log(data);
         }).catch(error => {
+          alert(JSON.stringify(error))
           console.error(error);
         });
       }
