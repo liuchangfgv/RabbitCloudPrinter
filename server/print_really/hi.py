@@ -9,6 +9,7 @@ from PIL import Image
 # from fpdf import FPDF
 from docx2pdf import convert as doc2pdf
 # import fitz
+import requests
 
 app = Flask(__name__)
 
@@ -46,13 +47,101 @@ def api_v2_time():
 """
 JSON 格式表单接收
 {code:"201",info:"前端传递的数据",data:{filename:"文件名",filepath:"文件路径",...}}
+e.g. 
+{'code': '201', 'info': '前端传递的数据', 'data': {'file': {}, 'blackAndWhitePrinting': 'on', 'deleteAfterPrinting': 'on', 'printAllPages': 'on', 'pageRange': ''}}
+"""
+
+"""
+201: 成功
+411: 请求错误
+412：获取文件名错误
+413：截取页数失败 有较大概率是输入错误
 """
 @app.route(AUTH_key+"/api-v2/post_json", methods=['POST'])
 def json_form_accept():
-  print(request.json)
+    str1 = ''
+    tempfile = []
+    json_data = request.json
+    if json_data['code'] != 201:
+        return jsonify({'code': 411,'info':'非法参数'})
+    file_uuid = json_data['data']['file']
+    is_bw = True if 'blackAndWhitePrinting' in json_data['data'] else False
+    pr_all =  True if 'printAllPages' in json_data['data'] else False
+    del_after_print = True if 'deleteAfterPrinting' in json_data['data'] else False
 
+    file_path = get_file_path(request.cookies.get('dayi-cookie-for-uploads'),file_uuid)
+    if file_path == 'Error':
+        str1 += '大黑阔？<br>\n'
+        return jsonify({'code': 412,'info':str1})
+    tempfile.append(file_path)
 
+    if ispic(file_path):
+                str1+="[dayi]检测到了你上传了图片文件，正在暴力转为pdf<br>\n"
+                file_path_tmp=file_path
+                file_path=con_pic2pdf(file_path)
+                if(file_path == "[error]"):
+                    str1+="[error!!]转换pdf失败，你这是图片还是啥？<br>\n"
+                    str1+="[error!!]我也不知道咋了这是，给你继续执行了吧<br>\n"
+                    file_path=file_path_tmp
+                    tempfile.append(file_path)
+    
+    if file_path.split('.')[-1] in ["doc","docx"]:
+        file_path = con_doc2pdf(file_path)# 这里显示Noreturn,这个函数大概率有问题
+        tempfile.append(file_path)
+    
+    if is_bw:
+        if file_path.split('.')[-1] == 'txt':
+            str1 += "你确定txt还需要转黑白嘛<br>\n"
+        elif file_path.split('.')[-1] != 'pdf':
+            str1 += "这种格式还不支持转黑白哎<br>\n"
+        else :
+            str1 += "正在为您转黑白<br>\n"
+            file_path_tmp = con2BW(file_path)
+            if file_path == 'Error':
+                str1 += "转换失败了。。。<br>\n"
+                str1 += "要么直接打印彩色？<br>\n"
+            else:
+                file_path = file_path_tmp
+                tempfile.append(file_path)
+    
+    if not pr_all:
+        exe = os.popen('convert -density 300 "{}"[{}] "{}"'.format(file_path,json_data['data']['pageRange'],file_path+"_page.pdf"))
+        if exe.read() != '':
+            str1 += "截取页数失败了哎，你输入格式对嘛<br>\n"
+            str1 += "像这样:<br>\n"
+            str1 += "1-5,9,10-20<br>\n"
+            if del_after_print:
+                del_all_files(tempfile)
+                str1 += "已经为您把处理过程中产生的中间文件删除<br>\n"
+            file_path = file_path+"_page.pdf"
+            tempfile.append(file_path)
+            return jsonify({'code': 413,'info':str1})
+    
+    print_info=print_file(file_path)#打印
+    str1 += print_info
 
+    if del_after_print:
+        del_all_files(tempfile)
+        str1 += "已经为您把处理过程中产生的中间文件删除<br>\n"
+
+    return jsonify({'code': 201,'info':str1})
+
+def del_all_files(files):
+    for f in files:
+        try:
+            os.remove(f)
+        except:
+            pass
+
+def get_file_path(dayi_cookie,uuid):
+    cookies = {'dayi-cookie-for-uploads':dayi_cookie}
+    r = requests.get("http://127.0.0.1:3000/api/get_user_files",cookies=cookies)
+    if r.json()['code'] != 201 :
+        return 'Error' # No login
+    for l in r.json()['data']:
+        if l['uuid'] == uuid:
+            return l['file_path']
+            
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
