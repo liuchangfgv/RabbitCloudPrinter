@@ -61,6 +61,7 @@
             width: 0%;"></div>
       </div>
 
+
       <!-- 文件列表 -->
       <hr>
       <h2>文件列表</h2>
@@ -73,9 +74,8 @@
             <th>文件UUID</th>
             <th>操作</th>
             <th>操作</th>
-            <th>选择</th>
-
-
+            <th>操作</th>
+            <th>操作</th>
           </tr>
         </thead>
         <tbody id="file-list">
@@ -157,9 +157,9 @@
 
         //获得选择文件的UUID
         // 获取所有选中的文件的UUID
-        const selectedFiles = Array.from(document.getElementsByName('selected-file'))
-          .filter(cb => cb.checked)
-          .map(cb => cb.value);
+       // const selectedFiles = Array.from(document.getElementsByName('selected-file'))
+        //  .filter(cb => cb.checked)
+        //  .map(cb => cb.value);
 
         // 获取所有选中的文件的路径名和UUID
         const selectedFileDetails = Array.from(document.getElementsByName('selected-file'))
@@ -172,74 +172,98 @@
             };
           });
 
-        // 获取用户文件列表
-        function fetchUserFiles() {
-          fetch('/api/get_user_files', {
-            credentials: 'include'
-          })
-            .then(response => response.json())
-            .then(data => {
-              if (data.code == 201) {
-                const fileList = document.getElementById('file-list')
-                fileList.innerHTML = ''
-                const files = data.data
-                files.forEach(file => {
-                  const row = document.createElement('tr')
-                  const sizeCell = document.createElement('td')
-                  sizeCell.innerText = formatFileSize(file.file_size)
-                  const pathCell = document.createElement('td')
-                  pathCell.innerText = file.file_path
-                  const uuidCell = document.createElement('td')
-                  uuidCell.innerText = file.uuid
-                  const downloadCell = document.createElement('td')
-                  const downloadBtn = document.createElement('button')
-                  downloadBtn.innerText = '下载'
+          const selectedFiles = [];
 
-                  const selected_file_cell = document.createElement('input')
-                  selected_file_cell.setAttribute('type', 'checkbox')
-
-
-                  downloadBtn.classList.add('btn', 'btn-primary')
-                  downloadBtn.addEventListener('click', () => {
-                    downloadFile(file.uuid)
-                  })
-                  downloadCell.appendChild(downloadBtn)
-
-                  //删除按钮
-                  const deleteCell = document.createElement('td')
-                  const deleteBtn = document.createElement('button')
-                  deleteBtn.innerText = '删除'
-                  deleteBtn.classList.add('btn', 'btn-danger')
-                  deleteBtn.addEventListener('click', () => {
-                    deleteFile(file.uuid)
-                  })
-                  deleteCell.appendChild(deleteBtn)
-
-                  //文件名
-                  const filenameCell = document.createElement('td')
-                  filenameCell.innerText = file.file_name
-
-
-                  row.appendChild(filenameCell)
-                  row.appendChild(sizeCell)
-                  row.appendChild(pathCell)
-                  row.appendChild(uuidCell)
-
-                  row.appendChild(downloadCell)
-                  row.appendChild(deleteCell)
-                  row.appendChild(selected_file_cell)
-                  fileList.appendChild(row)
-                })
-              } else if (data.code == 401) {
-                console.log('[dayi-error]用户未登录')
-                // 用户未登录，跳转到登录页面
-                // window.location.replace('/login.html')
-              } else {
-                alert(data.info)
-              }
+          function fetchUserFiles() {
+            fetch('/api/get_user_files', {
+              credentials: 'include'
             })
-            .catch(error => console.error(error))
-        }
+              .then(response => response.json())
+              .then(data => {
+                if (data.code == 201) {
+                  const fileList = document.getElementById('file-list')
+                  fileList.innerHTML = ''
+                  const files = data.data
+                  files.forEach(file => {
+                    const row = document.createElement('tr')
+                    const sizeCell = document.createElement('td')
+                    sizeCell.innerText = formatFileSize(file.file_size)
+                    const pathCell = document.createElement('td')
+                    pathCell.innerText = file.file_path
+                    const uuidCell = document.createElement('td')
+                    uuidCell.innerText = file.uuid
+
+                    const downloadCell = document.createElement('td')
+                    const downloadBtn = document.createElement('button')
+                    downloadBtn.innerText = '下载'
+                    
+                    
+                    const selected_file_cell = document.createElement('td')
+                    const selected_file_Btn = document.createElement('button')
+                    selected_file_Btn.innerText = '选择我'
+
+                    //checkbox.setAttribute('type', 'checkbox')
+                    //selected_file_cell.appendChild(checkbox)
+                    //const selected_file_cell = document.createElement('input')
+                    //selected_file_cell.setAttribute('type', 'checkbox')
+                    //selected_file_cell.setAttribute('value', file.uuid)
+
+
+//                    selected_file_cell.addEventListener('change', (event) => {
+//                      console.log('[dayi-info]', event.target.checked)
+//
+//                      const checkbox = event.target;
+//                      if (checkbox.checked) {
+//                        selectedFiles.push(file.uuid);
+//                      } else {
+//                        const index = selectedFiles.indexOf(file.uuid);
+//                        if (index !== -1) {
+//                          selectedFiles.splice(index, 1);
+//                        }
+//                      }
+//                    });
+      
+                    downloadBtn.classList.add('btn', 'btn-primary')
+                    downloadBtn.addEventListener('click', () => {
+                      downloadFile(file.uuid)
+                    })
+                    downloadCell.appendChild(downloadBtn)
+      
+                    //删除按钮
+                    const deleteCell = document.createElement('td')
+                    const deleteBtn = document.createElement('button')
+                    deleteBtn.innerText = '删除'
+                    deleteBtn.classList.add('btn', 'btn-danger')
+                    deleteBtn.addEventListener('click', () => {
+                      deleteFile(file.uuid)
+                    })
+                    deleteCell.appendChild(deleteBtn)
+      
+                    //文件名
+                    const filenameCell = document.createElement('td')
+                    filenameCell.innerText = file.file_name
+      
+      
+                    row.appendChild(filenameCell)
+                    row.appendChild(sizeCell)
+                    row.appendChild(pathCell)
+                    row.appendChild(uuidCell)
+                    row.appendChild(downloadCell)
+                    row.appendChild(deleteCell)
+                    row.appendChild(selected_file_cell)
+
+                    fileList.appendChild(row)
+                  })
+                } else if (data.code == 401) {
+                  console.log('[dayi-error]用户未登录')
+                  // 用户未登录，跳转到登录页面
+                  // window.location.replace('/login.html')
+                } else {
+                  alert(data.info)
+                }
+              })
+              .catch(error => console.error(error))
+          }
 
         // 下载文件
         function downloadFile(uuid) {
@@ -322,11 +346,6 @@
           // 页面加载完成时获取用户文件列表
           fetchUserFiles()
         }
-
-
-
-
-
         //上传文件函数
         function uploadFile(formData) {
           const xhr = new XMLHttpRequest();
@@ -362,9 +381,6 @@
           xhr.send(formData);
         }
 
-
-
-
         //上传按钮
         document.getElementById('manual-upload-button').addEventListener('click', (event) => {
           event.preventDefault();
@@ -378,7 +394,6 @@
       <script>
         // 日志信息
         const logTextarea = document.getElementById('log');
-
         function log(message) {
           logTextarea.value += message + '\n';
         }
