@@ -36,26 +36,34 @@ async function process_file(res,req,next){
     fs.mkdirSync(userDir, { recursive: true });
   }
 
-  //cute_uuid.uuid_cute("file_")
-  const destFilePath = path.join(userDir, upload_file_name);
+
+  const fileNameParts = upload_file_name.split('.');
+  const fileExt = fileNameParts.pop(); // 文件扩展名
+  const fileNameWithoutExt = fileNameParts.join('.');
+  const randomNum = Math.floor(Math.random() * 10000); // 生成四位随机数
+  const newFileName = fileNameWithoutExt + '_' + randomNum + '.' + fileExt; // 拼接新文件名
+  const destFilePath = path.join(userDir, newFileName);
+
+
   fs.renameSync(upload_file_path, destFilePath);
 
   // Remove temporary file
   // fs.unlinkSync(upload_file_path);
-  
+  console.log(`[dayi-info]新文件名: ${newFileName}`)
   console.log('[dayi-info]用户目录:'+user_name)
   console.log('[dayi-info]上传文件路径:'+destFilePath)
 
   //插入数据库
   const file_uuid = cute_uuid.uuid_cute('');
-  await sql.dayi_insert_file(destFilePath, user_name, file_uuid, upload_file_size, upload_file_name);
+  await sql.dayi_insert_file(destFilePath, user_name, file_uuid, upload_file_size, newFileName);
 
   //设置头为json
   res.setHeader('Content-Type', 'application/json');
-  res.json({code: 200,info: '上传成功'})
-  next();
+  res.json({code: 201,info: '上传成功'})
+  // next();
 }
 
 
 
 exports.process_file = process_file
+exports.dayi_process_file = process_file

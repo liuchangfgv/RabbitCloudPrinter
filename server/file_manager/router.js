@@ -35,8 +35,8 @@ router.get('/api/wanna_login', cookieParser(), async function (req, res, next) {
 // API-GET-USER-NAME
 router.get('/api/get_user_name', cookieParser(), async function (req, res, next) {
   const res_raw = await dayi_user_manger.dayi_get_user_name(req, res)
-  res.setHeader("Content-Type", "application/json;charset=utf-8")
-  res.write(JSON.stringify(res_raw))
+  // res.setHeader("Content-Type", "application/json;charset=utf-8")
+  // res.write()
   res.end()
   next()
 })

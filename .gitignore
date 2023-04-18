@@ -2,3 +2,7 @@ server/file_manager/node_modules
 server/file_manager/upload-tmp/*
 server/file_manager/upload/
 server/print_really/uploads/
+*.pdf
+*.docx
+*.xlsx
+*.pptx

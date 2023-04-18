@@ -68,9 +68,11 @@
                 </div>
               
                 <button type="submit">上传</button>
-              </form>
+              
+            <!-- 
+                 </form>
 
-                        <!-- 选择文件 -->
+                        选择文件
                         <div>
 
                             <a href="javascript:;" class="mdui-btn mdui-btn-raised">
@@ -86,8 +88,8 @@
                             </label>
                           </div>
 
-                        <!-- 这里是进度条 -->
-                        <div id="dayi_process_1"></div> <!--进度条呜呜呜呜，我整了好久先整个整个qwq-->
+                        !-- 这里是进度条 --
+                        <div id="dayi_process_1"></div> <!--进度条呜呜呜呜，我整了好久先整个整个qwq--
                         <div><a href="javascript:;" class="a-upload"><input type="submit" id="dayi_submit"
                                     value="提交" />[点击打印]芜湖起飞↗✈️</a></div>
                         <h4>当前支持更多格式啦 <br> ver.Beta 0.0029 <br>
@@ -95,6 +97,8 @@
                             {{str_time|safe}}</h4>
                         <br>
                     </form>
+              > -->
+           
                 </div>
 
             </div>
@@ -110,12 +114,14 @@
         </div>
     </div>
 
-    <!-- 获得表单数据 -->
+
+    
+
+<!-- 获得表单数据 -->
 <script>
     //拦截提交跳转
     const form = document.getElementById("myForm");
     form.addEventListener("submit", submitForm);
-    
 
     function submitForm() {
         event.preventDefault();
@@ -129,12 +135,16 @@
 
         console.log(jsonData);
 
-        fetch("./submit-form", {
+        fetch("./api-v2/post_json", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(jsonData)
+            body: JSON.stringify({
+                code: "201",
+                info: "前端传递的数据",
+                data: jsonData
+            })
         }).then(response => {
             if (!response.ok) {
                 throw new Error(response.statusText);

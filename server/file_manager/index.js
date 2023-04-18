@@ -38,10 +38,43 @@ app.post('/api/file_upload',upload.single('file'),cookieParser(),async function(
   var res_raw = {code:'101',info:''};//返回json的准备的
   var req_body = req.body;
 
-  dayi_process_file.process_file(res,req,next)
-  
+  //如果没有文件返回错误代码
+  if(!req.file){
+    res_raw.code = '102';
+    res_raw.info = '没有文件上传';
+    res.setHeader("Content-Type", "application/json;charset=utf-8")
+    res.write(JSON.stringify(res_raw))
+    res.end()
+    next()
+    return;
+  }
 
+  //如果没有登录返回错误代码
+  var user_cookie = req.cookies[cookie_key];
+  if (!user_cookie) {
+    res_raw.code = '103';
+    res_raw.info = '没有登录';
+    res.setHeader("Content-Type", "application/json;charset=utf-8")
+    res.write(JSON.stringify(res_raw))
+    res.end()
+    next()
+    return;
+  }
 
+  //如果有文件就进行处理
+  if(req.file){
+    await dayi_process_file.dayi_process_file(res,req)
+    res.end()
+  }
+  // res.setHeader("Content-Type", "application/json;charset=utf-8")
+  // res.write(JSON.stringify(res_raw))
+  // res.end()
+  // next()
+
+  let endTime = new Date().getTime();
+  console.log("[dayi-info]文件上传+处理耗时："+(endTime-startTime)+"ms");
+
+  // dayi_process_file.process_file(res,req,next)
 })
 
 
