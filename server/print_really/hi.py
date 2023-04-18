@@ -62,8 +62,8 @@ def json_form_accept():
     str1 = ''
     tempfile = []
     json_data = request.json
-    if json_data['code'] != 201:
-        return jsonify({'code': 411,'info':'非法参数'})
+    # if json_data['code'] != 201:
+    #     return jsonify({'code': 411,'info':'非法参数'})
     file_uuid = json_data['data']['file']
     is_bw = 'blackAndWhitePrinting' in json_data['data']
     pr_all =  'printAllPages' in json_data['data']

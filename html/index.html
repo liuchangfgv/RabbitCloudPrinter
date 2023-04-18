@@ -510,7 +510,10 @@ selected_file_Btn.addEventListener('click', () => {
         for (const [key, value] of formData.entries()) {
           jsonData[key] = value;
         }
+        jsonData['file'] = selectedUUID;
+
         console.log(jsonData);
+        
         fetch("./api-v2/post_json", {
           method: "POST",
           headers: {
