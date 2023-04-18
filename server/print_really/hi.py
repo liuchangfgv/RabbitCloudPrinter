@@ -87,22 +87,29 @@ def con_pic2pdf(allfilepath):
 
 # 将文档转化为黑白色
 def con2BW(allfilepath):
-    pdf = FPDF(unit = 'pt')
-    doc = fitz.open(allfilepath )
-    for i, page in enumerate(doc):
-        pix = page.get_pixmap(alpha=False)
-        img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
-        gray_img = img.convert('L')
-        gray_img.save("temp{}.png".format(i))
-        size = (float(pix.width),float(pix.height))
-        pdf.add_page(format = size)
-        pdf.set_xy(0,0)
-        pdf.set_top_margin(0)
-        pdf.set_left_margin(0)
-        pdf.image("temp{}.png".format(i))
-        os.remove("temp{}.png".format(i))
-    pdf.output(allfilepath+"_BW.pdf", "F")
-    os.remove(allfilepath)
+    # pdf = FPDF(unit = 'pt')
+    # doc = fitz.open(allfilepath )
+    # for i, page in enumerate(doc):
+    #     pix = page.get_pixmap(alpha=False)
+    #     img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+    #     gray_img = img.convert('L')
+    #     gray_img.save("temp{}.png".format(i))
+    #     size = (float(pix.width),float(pix.height))
+    #     pdf.add_page(format = size)
+    #     pdf.set_xy(0,0)
+    #     pdf.set_top_margin(0)
+    #     pdf.set_left_margin(0)
+    #     pdf.image("temp{}.png".format(i))
+    #     os.remove("temp{}.png".format(i))
+    # pdf.output(allfilepath+"_BW.pdf", "F")
+    # F**k you fpdf
+    exe = os.popen('convert -density 300 {} -type Grayscale {}'.format(allfilepath,allfilepath+"_BW.pdf"))
+    if exe.read() != '':
+        return 'Error'
+    try:
+        os.remove(allfilepath)
+    except:
+        pass
     return allfilepath+"_BW.pdf"
 
 
@@ -206,6 +213,9 @@ def upload_file_1():
                     str1 += "你上传的格式暂时不支持黑白打印，已经跳过文档处理<br>\n"
                 else:
                     all_path = con2BW(all_path)
+                    if all_path == 'Error':
+                        str1 += '转换失败了<br\n>'
+                        return render_template("echo.html",echo_str=str1)
 
             if not request.form.get("printAllPages"):
                 pass
