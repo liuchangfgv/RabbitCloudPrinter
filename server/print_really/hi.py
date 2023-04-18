@@ -116,7 +116,7 @@ def json_form_accept():
                     str1+="[error!!]转换pdf失败，你这是图片还是啥？\n"
                     str1+="[error!!]我也不知道咋了这是，给你继续执行了吧\n"
                     file_path=file_path_tmp
-                    tempfile.append(file_path)
+                tempfile.append(file_path)
     
     if file_path.split('.')[-1] in ["doc","docx"]:
         file_path = con_doc2pdf(file_path)# 这里显示Noreturn,这个函数大概率有问题
@@ -190,7 +190,7 @@ def allowed_file(filename):
 
 # 执行打印命令,print.py [filepath]
 def print_file(filepath):
-    run_command="python print.py "+filepath
+    run_command="pdm run print.py "+filepath
     ex = os.popen(run_command)
     extext = ex.read()
     ex.close()
