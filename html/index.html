@@ -93,6 +93,12 @@
       <!-- 在页面中显示当前选择的文件信息 -->
       <div id="selected-file-info"></div>
 
+      <!-- 当前选择的文件 -->
+      您选择了:<div id="selected-file-uuid"></div>
+      <script>
+        var selectedUUID  = "";
+      </script>
+
       <script>
         const chooseFileButton = document.getElementById('choose-file-button');
         const selectedFileInfo = document.getElementById('selected-file-info');
@@ -162,18 +168,16 @@
         //  .map(cb => cb.value);
 
         // 获取所有选中的文件的路径名和UUID
-        const selectedFileDetails = Array.from(document.getElementsByName('selected-file'))
-          .filter(cb => cb.checked)
-          .map(cb => {
-            const row = cb.closest('tr');
-            return {
-              path: row.cells[2].innerText,
-              uuid: cb.value,
-            };
-          });
-
+//        const selectedFileDetails = Array.from(document.getElementsByName('selected-file'))
+//          .filter(cb => cb.checked)
+//          .map(cb => {
+//            const row = cb.closest('tr');
+//            return {
+//              path: row.cells[2].innerText,
+//              uuid: cb.value,
+//            };
+//          });
           const selectedFiles = [];
-
           function fetchUserFiles() {
             fetch('/api/get_user_files', {
               credentials: 'include'
@@ -197,37 +201,22 @@
                     const downloadBtn = document.createElement('button')
                     downloadBtn.innerText = '下载'
                     
-                    
-                    const selected_file_cell = document.createElement('td')
-                    const selected_file_Btn = document.createElement('button')
-                    selected_file_Btn.innerText = '选择我'
+//文件选择                    
+const selected_file_cell = document.createElement('td')
+const selected_file_Btn = document.createElement('button')
+selected_file_Btn.innerText = '选择我'
 
-                    //checkbox.setAttribute('type', 'checkbox')
-                    //selected_file_cell.appendChild(checkbox)
-                    //const selected_file_cell = document.createElement('input')
-                    //selected_file_cell.setAttribute('type', 'checkbox')
-                    //selected_file_cell.setAttribute('value', file.uuid)
+selected_file_cell.appendChild(selected_file_Btn)
+selected_file_Btn.classList.add('btn', 'btn-info')
+selected_file_Btn.addEventListener('click', () => {
 
+  selectedUUID = file.uuid
+  //显示当前的UUID
+  document.getElementById("selected-file-uuid").innerText = selectedUUID
 
-//                    selected_file_cell.addEventListener('change', (event) => {
-//                      console.log('[dayi-info]', event.target.checked)
-//
-//                      const checkbox = event.target;
-//                      if (checkbox.checked) {
-//                        selectedFiles.push(file.uuid);
-//                      } else {
-//                        const index = selectedFiles.indexOf(file.uuid);
-//                        if (index !== -1) {
-//                          selectedFiles.splice(index, 1);
-//                        }
-//                      }
-//                    });
-      
-                    downloadBtn.classList.add('btn', 'btn-primary')
-                    downloadBtn.addEventListener('click', () => {
-                      downloadFile(file.uuid)
-                    })
-                    downloadCell.appendChild(downloadBtn)
+  console.log(selectedUUID)
+})
+
       
                     //删除按钮
                     const deleteCell = document.createElement('td')
@@ -238,7 +227,8 @@
                       deleteFile(file.uuid)
                     })
                     deleteCell.appendChild(deleteBtn)
-      
+
+
                     //文件名
                     const filenameCell = document.createElement('td')
                     filenameCell.innerText = file.file_name
@@ -265,15 +255,11 @@
               .catch(error => console.error(error))
           }
 
+        
         // 下载文件
         function downloadFile(uuid) {
           window.location.href = '/api/download_file/' + uuid;
         }
-
-
-
-
-
         // 格式化文件大小
         function formatFileSize(size) {
           if (size < 1024) {
