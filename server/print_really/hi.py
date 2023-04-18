@@ -194,10 +194,6 @@ def con2BW(allfilepath):
     exe = os.popen('convert -density 300 {} -type Grayscale {}'.format(allfilepath,allfilepath+"_BW.pdf"))
     if exe.read() != '':
         return 'Error'
-    try:
-        os.remove(allfilepath)
-    except:
-        pass
     return allfilepath+"_BW.pdf"
 
 
