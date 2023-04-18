@@ -1,7 +1,3 @@
-@REM 正在写，没写完
-
-@REM PDM包管理器
-
-pip install pdm
-@REM python -m pip install --user pipxpython -m pipx ensurepath
-
+@REM 应该可以了
+cd server\file_manager\
+npm i -g yarn && yarn && cd .. && cd .. && cd server\print_really\ && pip install pdm && pdm install

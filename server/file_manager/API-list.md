@@ -1,67 +1,91 @@
 # API documentation
 
+> 这里是文档
+
 ## Login method
 
-`http://localhost:3000/api/wanna_login`
+```
+http://localhost:3000/api/wanna_login
+```
 
-- 201 注册成功
-- 401 已经登录，并且续了cookie
-- 411 非法cookie登录，拒绝请求，并申请新的cookie
+- 201: Successfully registered and logged in.
+- 401: User already logged in, and cookie extended.
+- 411: Illegal cookie login, refuse request, and apply for a new cookie.
 
+## File upload
 
-## File upload 
-
+```
 http://localhost:3000/file-upload.html
+```
 
-## File UPload 
+## File upload API
 
-`http://localhost:3000/api/upload_file`
+```
+http://localhost:3000/api/upload_file
+```
 
-- 201 上传成功
-- 401 用户未登录
-- 411 用户不存在
+- 201: Upload successful.
+- 401: User not logged in.
+- 411: User does not exist.
 
 ## Get user files list method
 
-`http://localhost:3000/api/get_user_files`
+```
+http://localhost:3000/api/get_user_files
+```
 
-- 201 获取用户文件列表成功
-- 401 用户未登录
-- 411 用户不存在
+- 201: Successfully obtained the user's file list.
+- 401: User not logged in.
+- 411: User does not exist.
 
 ## Delete file method
 
-`http://localhost:3000/api/delete_file/:uuid`
+```
+http://localhost:3000/api/delete_file/:uuid
+```
 
-- 201 删除成功
-- 401 用户未登录
-- 404 文件不存在或没有权限
-- 411 用户不存在，非法操作
+- 201: Successfully deleted.
+- 401: User not logged in.
+- 404: File does not exist or permission denied.
+- 411: User does not exist, illegal operation.
 
 ## Download file method
 
-`http://localhost:3000/api/download_file/:uuid`
+```
+http://localhost:3000/api/download_file/:uuid
+```
 
-- 201 下载成功
-- 401 用户未登录
-- 404 文件不存在或没有权限
-- 411 用户不存在，非法操作
+- 201: Successfully downloaded.
+- 401: User not logged in.
+- 404: File does not exist or permission denied.
+- 411: User does not exist, illegal operation.
 
-[]: # Path: server\file_manager\README.md
-# file_manager
+## Get file path method
 
-File manager for file manager
+```
+http://localhost:3000/api/get_file_path/:uuid
+```
 
-## Install
+- 201: Successfully obtained the file path.
+- 401: User not logged in.
+- 404: File does not exist or permission denied.
+- 411: User does not exist, illegal operation.
 
-```shell
-npm install -g yarn
+
+
+## Project information
+
+### Install
+
+```
+bashCopy codenpm install -g yarn
 yarn install
 yarn run start
 ```
 
-## Run
+### Run
 
-```shell
+```
+bashCopy code
 npm start
 ```
