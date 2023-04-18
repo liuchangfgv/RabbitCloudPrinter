@@ -71,23 +71,61 @@
             <th>大小</th>
             <th>路径</th>
             <th>文件UUID</th>
-
             <th>操作</th>
             <th>操作</th>
+            <th>选择</th>
 
 
           </tr>
         </thead>
         <tbody id="file-list">
         </tbody>
+        <!-- 文件选择框 -->
       </table>
-
       <hr>
+      <!-- 文件列表 -->
+
+
+      <!-- 选择文件 -->
+      <!-- 添加一个按钮或者表单元素 -->
+      <button id="choose-file-button">选择文件</button>
+
+      <!-- 在页面中显示当前选择的文件信息 -->
+      <div id="selected-file-info"></div>
+
+      <script>
+        const chooseFileButton = document.getElementById('choose-file-button');
+        const selectedFileInfo = document.getElementById('selected-file-info');
+
+        // 监听按钮的点击事件
+        chooseFileButton.addEventListener('click', () => {
+          // 创建一个 <input type="file"> 元素
+          const fileInput = document.createElement('input');
+          fileInput.type = 'file';
+
+          // 监听文件选择事件
+          fileInput.addEventListener('change', () => {
+            const selectedFile = fileInput.files[0]; // 获取用户选择的文件
+            // 在页面中显示文件信息
+            selectedFileInfo.innerHTML = `
+        <p>文件名：${selectedFile.name}</p>
+        <p>文件类型：${selectedFile.type}</p>
+        <p>文件大小：${selectedFile.size} 字节</p>
+        <p>最后修改时间：${selectedFile.lastModifiedDate}</p>
+      `;
+          });
+
+          // 触发文件选择对话框
+          fileInput.click();
+        });
+      </script>
+      <!-- 选择文件 -->
+
       <script>
         // 获取当前用户
         fetch('/api/wanna_login', {
-            credentials: 'include'
-          })
+          credentials: 'include'
+        })
           .then(response => response.json())
           .then(data => {
             if (data.code == 201) {
@@ -105,8 +143,8 @@
         document.getElementById('login-button').addEventListener('click', (event) => {
           event.preventDefault();
           fetch('/api/wanna_login', {
-              credentials: 'include'
-            })
+            credentials: 'include'
+          })
             .then(response => response.json())
             .then(data => {
               if (data.code === 200) {
@@ -117,53 +155,28 @@
             });
         });
 
+        //获得选择文件的UUID
+        // 获取所有选中的文件的UUID
+        const selectedFiles = Array.from(document.getElementsByName('selected-file'))
+          .filter(cb => cb.checked)
+          .map(cb => cb.value);
 
-        // // 获取用户文件列表
-        // function fetchUserFiles() {
-        //   fetch('/api/get_user_files', { credentials: 'include' })
-        //     .then(response => response.json())
-        //     .then(data => {
-        //       if (data.code == 201) {
-        //         const fileList = document.getElementById('file-list')
-        //         fileList.innerHTML = ''
-        //         const files = data.data
-        //         files.forEach(file => {
-        //           const row = document.createElement('tr')
-        //           const sizeCell = document.createElement('td')
-        //           sizeCell.innerText = formatFileSize(file.file_size)
-        //           const pathCell = document.createElement('td')
-        //           pathCell.innerText = file.file_path
-        //           const uuidCell = document.createElement('td')
-        //           uuidCell.innerText = file.uuid
-        //           const deleteCell = document.createElement('td')
-        //           const deleteBtn = document.createElement('button')
-        //           deleteBtn.innerText = '删除'
-        //           deleteBtn.classList.add('btn', 'btn-danger')
-        //           deleteBtn.addEventListener('click', () => {
-        //             deleteFile(file.uuid)
-        //           })
-        //           deleteCell.appendChild(deleteBtn)
-        //           row.appendChild(sizeCell)
-        //           row.appendChild(pathCell)
-        //           row.appendChild(uuidCell)
-        //           row.appendChild(deleteCell)
-        //           fileList.appendChild(row)
-        //         })
-        //       } else if (data.code == 401) {
-        //         console.log('[dayi-error]用户未登录')
-        //         // 用户未登录，跳转到登录页面
-        //         // window.location.replace('/login.html')
-        //       } else {
-        //         alert(data.info)
-        //       }
-        //     })
-        //     .catch(error => console.error(error))
-        // }
+        // 获取所有选中的文件的路径名和UUID
+        const selectedFileDetails = Array.from(document.getElementsByName('selected-file'))
+          .filter(cb => cb.checked)
+          .map(cb => {
+            const row = cb.closest('tr');
+            return {
+              path: row.cells[2].innerText,
+              uuid: cb.value,
+            };
+          });
+
         // 获取用户文件列表
         function fetchUserFiles() {
           fetch('/api/get_user_files', {
-              credentials: 'include'
-            })
+            credentials: 'include'
+          })
             .then(response => response.json())
             .then(data => {
               if (data.code == 201) {
@@ -181,6 +194,11 @@
                   const downloadCell = document.createElement('td')
                   const downloadBtn = document.createElement('button')
                   downloadBtn.innerText = '下载'
+
+                  const selected_file_cell = document.createElement('input')
+                  selected_file_cell.setAttribute('type', 'checkbox')
+
+
                   downloadBtn.classList.add('btn', 'btn-primary')
                   downloadBtn.addEventListener('click', () => {
                     downloadFile(file.uuid)
@@ -209,6 +227,7 @@
 
                   row.appendChild(downloadCell)
                   row.appendChild(deleteCell)
+                  row.appendChild(selected_file_cell)
                   fileList.appendChild(row)
                 })
               } else if (data.code == 401) {
@@ -248,8 +267,8 @@
             return
           }
           fetch('/api/delete_file/' + uuid, {
-              credentials: 'include'
-            })
+            credentials: 'include'
+          })
             .then(response => response.json())
             .then(data => {
               if (data.code == 201) {
@@ -269,8 +288,8 @@
         window.onload = function () {
           // 获取当前用户
           fetch('/api/wanna_login', {
-              credentials: 'include'
-            })
+            credentials: 'include'
+          })
             .then(response => response.json())
             .then(data => {
               if (data.code == 201) {
@@ -287,8 +306,8 @@
           // 获得用户名
           const userLabel = document.getElementById('user-label')
           fetch('/api/get_user_name', {
-              credentials: 'include'
-            })
+            credentials: 'include'
+          })
             .then(response => response.json())
             .then(data => {
               if (data.code == 201 || data.code == 401) {
@@ -407,6 +426,7 @@
   <!-- 文件管理: -->
   <!-- 文件管理: -->
 
+  <!-- 文件选择 -->
   <div class="mdui-container">
     <div class="mdui-textfield">
       <form class="Custom-class-1" id="myForm" action="./uploader" method="POST" enctype="multipart/form-data">
@@ -416,8 +436,8 @@
             <h3>选择文件：</h3>
             <div class="Custom-class-1" style="width:400px;height:60px;border: 2px
             solid grey;">
-          <input style="width:200px;border:none;" type="file" name="file">
-        </div>
+              <input style="width:200px;border:none;" type="file" name="file">
+            </div>
           </label>
         </div>
 
@@ -451,187 +471,141 @@
             <input style="width:400px" z id="pageRange" name="pageRange" type="text" placeholder="例如：1-5,7,10-12">
           </label>
         </div>
-
         <button style="width: 100px;" type="submit">上传</button>
-
-        <!-- 
-                 </form>
-
-                        选择文件
-                        <div>
-
-                            <a href="javascript:;" class="mdui-btn mdui-btn-raised">
-                                <input type="file" name="file" class="mdui-btn mdui-btn-raised" />
-                            </a>
-                        </div>
-
-                        <div class="mdui-col">
-                            <label class="mdui-checkbox">
-                                <input type="checkbox" id="bw" name="bw">
-                                <i class="mdui-checkbox-icon"></i>
-                                黑白
-                            </label>
-                          </div>
-
-                        !-- 这里是进度条 --
-                        <div id="dayi_process_1"></div> <!--进度条呜呜呜呜，我整了好久先整个整个qwq--
-                        <div><a href="javascript:;" class="a-upload"><input type="submit" id="dayi_submit"
-                                    value="提交" />[点击打印]芜湖起飞↗✈️</a></div>
-                        <h4>当前支持更多格式啦 <br> ver.Beta 0.0029 <br>
-                            支持图片很多以及各种doc docx啥的owo<br><br>
-                            {{str_time|safe}}</h4>
-                        <br>
-                    </form>
-              > -->
     </div>
 
-  </div>
-
-  <div class="mdui-container Custom-class-1" style="padding-top:50px;">
-    <div class="mdui-textfield">
-      <div>
-        <a class="Custom-class-1">
-          <div>python服务器实时时间:</div>
-          <div id="dayi-time">正在获取时间...</div>
-          <!-- <br> -->
-          <div>NODE服务器状态检测:</div>
-          <div id="node-status">
-            正在检测服务器状态...
-          </div>
-          <br><br>
-        </a>
+    <!-- 服务器实时状态 -->
+    <div class="mdui-container Custom-class-1" style="padding-top:50px;">
+      <div class="mdui-textfield">
+        <div>
+          <a class="Custom-class-1">
+            <div>python服务器实时时间:</div>
+            <div id="dayi-time">正在获取时间...</div>
+            <!-- <br> -->
+            <div>NODE服务器状态检测:</div>
+            <div id="node-status">
+              正在检测服务器状态...
+            </div>
+            <br><br>
+          </a>
+        </div>
       </div>
     </div>
-  </div>
+    <!-- 服务器实时状态 -->
 
 
 
-
-  <!-- 获得表单数据 -->
-  <script>
-    //拦截提交跳转
-    const form = document.getElementById("myForm");
-    form.addEventListener("submit", submitForm);
-
-    function submitForm() {
-      event.preventDefault();
+    <!-- 获得表单数据 -->
+    <script>
+      //拦截提交跳转
       const form = document.getElementById("myForm");
-      const formData = new FormData(form);
+      form.addEventListener("submit", submitForm);
+      function submitForm() {
+        event.preventDefault();
+        const form = document.getElementById("myForm");
+        const formData = new FormData(form);
 
-      const jsonData = {};
-      for (const [key, value] of formData.entries()) {
-        jsonData[key] = value;
-      }
-
-      console.log(jsonData);
-
-      fetch("./api-v2/post_json", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          code: "201",
-          info: "前端传递的数据",
-          data: jsonData
-        })
-      }).then(response => {
-        if (!response.ok) {
-          throw new Error(response.statusText);
+        const jsonData = {};
+        for (const [key, value] of formData.entries()) {
+          jsonData[key] = value;
         }
-        return response.json();
-      }).then(data => {
-        console.log(data);
-      }).catch(error => {
-        console.error(error);
-      });
-    }
-  </script>
-  <!-- 测试后端服务器状态 -->
-  <div class="mdui-container">
-    <div class="mdui-textfield">
-      <div>
-
-        <script>
-          function checkServerStatus() {
-            const st = document.getElementById('node-status')
-            fetch('/api/test').then(response => response.json())
-              .then(data => {
-                if (data.code == 201) {
-                  st.innerText = '文件服务器运行正常 √';
-                } else {
-                  st.innerText = '文件服务器运行异常 ×';
-                }
-              })
-              .catch(error => {
-                st.innerText = '请求服务器出错 ×，文件服务器运行异常 ×';
-              });
+        console.log(jsonData);
+        fetch("./api-v2/post_json", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            code: "201",
+            info: "前端传递的数据",
+            data: jsonData
+          })
+        }).then(response => {
+          if (!response.ok) {
+            throw new Error(response.statusText);
           }
-          setInterval(checkServerStatus, 5000);
-          checkServerStatus();
-        </script>
+          return response.json();
+        }).then(data => {
+          console.log(data);
+        }).catch(error => {
+          console.error(error);
+        });
+      }
+    </script>
+
+    <!-- 测试后端服务器状态 -->
+    <div class="mdui-container">
+      <div class="mdui-textfield">
+        <div>
+          <script>
+            function checkServerStatus() {
+              const st = document.getElementById('node-status')
+              fetch('/api/test').then(response => response.json())
+                .then(data => {
+                  if (data.code == 201) {
+                    st.innerText = '文件服务器运行正常 √';
+                  } else {
+                    st.innerText = '文件服务器运行异常 ×';
+                  }
+                })
+                .catch(error => {
+                  st.innerText = '请求服务器出错 ×，文件服务器运行异常 ×';
+                });
+            }
+            setInterval(checkServerStatus, 5000);
+            checkServerStatus();
+          </script>
+        </div>
       </div>
     </div>
-  </div>
-  <!-- 测试后端服务器状态 -->
+    <!-- 测试后端服务器状态 -->
 
 
-  <div class="mdui-bottom-nav mdui-color-green-100">
-    <a href="" class="mdui-ripple mdui-bottom-nav-active">
-      <i class="mdui-icon material-icons">insert_emoticon</i>
-      <label>刷新</label>
-    </a>
-  </div>
-
-  <div class="mdui-dialog" id="message">
-    <div class="mdui-dialog-title" id="message_title">标题</div>
-    <div class="mdui-dialog-content" id="message_content">内容</div>
-    <div class="mdui-dialog-actions">
-      <button class="mdui-btn mdui-ripple" mdui-dialog-close>关闭</button>
+    <div class="mdui-bottom-nav mdui-color-green-100">
+      <a href="" class="mdui-ripple mdui-bottom-nav-active">
+        <i class="mdui-icon material-icons">insert_emoticon</i>
+        <label>刷新</label>
+      </a>
     </div>
-  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/js/mdui.min.js"
-    integrity="sha384-gCMZcshYKOGRX9r6wbDrvF+TcCCswSHFucUzUPwka+Gr+uHgjlYvkABr95TCOz3A" crossorigin="anonymous">
-  </script>
+    <div class="mdui-dialog" id="message">
+      <div class="mdui-dialog-title" id="message_title">标题</div>
+      <div class="mdui-dialog-content" id="message_content">内容</div>
+      <div class="mdui-dialog-actions">
+        <button class="mdui-btn mdui-ripple" mdui-dialog-close>关闭</button>
+      </div>
+    </div>
 
-  <script>
-    $(document).ready(function () {
-      $("#upl").change(function () {
-        var selname = $(this).val();
-        var str = "fakepath";
-        var hhstr = "";
-        if (selname.indexOf(str) >= 0) {
-          hhstr = selname.substring(12, selname.length);
-          $("#uplname").val(hhstr);
-        } else {
-          $("#uplname").val(selname);
-        }
-      });
-    });
+    <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/js/mdui.min.js"
+      integrity="sha384-gCMZcshYKOGRX9r6wbDrvF+TcCCswSHFucUzUPwka+Gr+uHgjlYvkABr95TCOz3A" crossorigin="anonymous">
+      </script>
 
-    $('#dayi_submit').click(function () {
-      document.getElementById("dayi_process_1").innerHTML =
-        "<div class=\"mdui-progress\"><div class=\"mdui-progress-indeterminate\"></div><br></div>";
-    });
+    <script>
+      window.addEventListener('load', function () {
+        FastClick.attach(document.body);
+      }, false);
+    </script>
 
-    window.addEventListener('load', function () {
-      FastClick.attach(document.body);
-    }, false);
-  </script>
-  <script>
-    const timeDiv = document.getElementById("dayi-time");
-    setInterval(() => {
-      fetch("./api-v2/time")
-        .then(response => response.json())
-        .then(data => {
-          // console.log(data);
-          const time = data.data[0];
-          timeDiv.innerText = time;
-        })
-        .catch(error => console.error(error));
-    }, 1000);
-  </script>
+
+    <!-- 获得实时时间 -->
+    <script>
+      const timeDiv = document.getElementById("dayi-time");
+      setInterval(() => {
+        fetch("./api-v2/time")
+          .then(response => response.json())
+          .then(data => {
+            // console.log(data);
+            const time = data.data[0];
+            timeDiv.innerText = time;
+          })
+          .catch(error => console.error(error));
+      }, 1000);
+    </script>
+    <!-- 获得实时时间 -->
+
+
+
+
 </body>
 <style>
   .Custom-class-1 {
