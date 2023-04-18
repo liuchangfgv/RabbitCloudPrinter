@@ -537,6 +537,40 @@ selected_file_Btn.addEventListener('click', () => {
       }
     </script>
 
+    <!-- 实时打印状态显示 -->
+    <div class="mdui-container">
+      <div class="mdui-textfield">
+    <div>
+        <h1>Real-time Print Info</h1>
+      <div id="print-info"></div>
+      <script>
+          // 定义请求 API 的函数
+          function getPrintInfo() {
+              var xhr = new XMLHttpRequest();
+              xhr.onreadystatechange = function() {
+                  if (this.readyState == 4 && this.status == 200) {
+                      var data = JSON.parse(this.responseText);
+                      if (data.code == "201") {
+                          // 更新页面上的打印信息
+                          var printInfoDiv = document.getElementById("print-info");
+                          printInfoDiv.innerHTML = "";
+                          for (var i = 0; i < data.data.length; i++) {
+                              var p = document.createElement("p");
+                              p.innerText = data.data[i];
+                              printInfoDiv.appendChild(p);
+                          }
+                      }
+                  }
+              };
+              xhr.open("GET", "/api-v2/realtime-print-info", true);
+              xhr.send();
+          }
+          // 每 5 秒钟请求一次 API
+          setInterval(getPrintInfo, 5000);
+    </script>
+    </div></div></div>
+    
+
     <!-- 测试后端服务器状态 -->
     <div class="mdui-container">
       <div class="mdui-textfield">
@@ -606,6 +640,7 @@ selected_file_Btn.addEventListener('click', () => {
       }, 1000);
     </script>
     <!-- 获得实时时间 -->
+
 
 
 
