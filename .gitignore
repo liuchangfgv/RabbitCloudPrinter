@@ -9,3 +9,4 @@ server/print_really/uploads/
 
 node_modules/*
 server/print_really/.venv/*
+*.db
