@@ -1,11 +1,19 @@
 @echo off
 
-echo Starting hi.py...
-start cmd \c "cd server\print_really && pdm run hi.py"
+@REM for debug
+taskkill /f /im python.exe
+taskkill /f /im node.exe
 
-echo Starting file_manager/index.js...
-cd ..\file_manager
-yarn start
+echo Starting hi.py...
+cd server/print_really/
+start pdm run hi.py
+
+cd .. && cd ..
+
+echo Starting hi.py...
+cd server/file_manager/
+start yarn start
+
 
 echo Starting index.js...
 cd ..\..
