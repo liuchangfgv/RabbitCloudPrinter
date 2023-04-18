@@ -65,23 +65,23 @@ def json_form_accept():
     if json_data['code'] != 201:
         return jsonify({'code': 411,'info':'非法参数'})
     file_uuid = json_data['data']['file']
-    is_bw = True if 'blackAndWhitePrinting' in json_data['data'] else False
-    pr_all =  True if 'printAllPages' in json_data['data'] else False
-    del_after_print = True if 'deleteAfterPrinting' in json_data['data'] else False
+    is_bw = 'blackAndWhitePrinting' in json_data['data']
+    pr_all =  'printAllPages' in json_data['data']
+    del_after_print = 'deleteAfterPrinting' in json_data['data']
 
     file_path = get_file_path(request.cookies.get('dayi-cookie-for-uploads'),file_uuid)
     if file_path == 'Error':
-        str1 += '大黑阔？<br>\n'
+        str1 += '大黑阔？\n'
         return jsonify({'code': 412,'info':str1})
     # tempfile.append(file_path) # 这个是记录在数据库的，不能删
 
     if ispic(file_path):
-                str1+="[dayi]检测到了你上传了图片文件，正在暴力转为pdf<br>\n"
+                str1+="[dayi]检测到了你上传了图片文件，正在暴力转为pdf\n"
                 file_path_tmp=file_path
                 file_path=con_pic2pdf(file_path)
                 if(file_path == "[error]"):
-                    str1+="[error!!]转换pdf失败，你这是图片还是啥？<br>\n"
-                    str1+="[error!!]我也不知道咋了这是，给你继续执行了吧<br>\n"
+                    str1+="[error!!]转换pdf失败，你这是图片还是啥？\n"
+                    str1+="[error!!]我也不知道咋了这是，给你继续执行了吧\n"
                     file_path=file_path_tmp
                     tempfile.append(file_path)
     
@@ -91,15 +91,15 @@ def json_form_accept():
     
     if is_bw:
         if file_path.split('.')[-1] == 'txt':
-            str1 += "你确定txt还需要转黑白嘛<br>\n"
+            str1 += "你确定txt还需要转黑白嘛\n"
         elif file_path.split('.')[-1] != 'pdf':
-            str1 += "这种格式还不支持转黑白哎<br>\n"
+            str1 += "这种格式还不支持转黑白哎\n"
         else :
-            str1 += "正在为您转黑白<br>\n"
+            str1 += "正在为您转黑白\n"
             file_path_tmp = con2BW(file_path)
             if file_path == 'Error':
-                str1 += "转换失败了。。。<br>\n"
-                str1 += "要么直接打印彩色？<br>\n"
+                str1 += "转换失败了。。。\n"
+                str1 += "要么直接打印彩色？\n"
             else:
                 file_path = file_path_tmp
                 tempfile.append(file_path)
@@ -107,13 +107,13 @@ def json_form_accept():
     if not pr_all:
         exe = os.popen('convert -density 300 "{}"[{}] "{}"'.format(file_path,json_data['data']['pageRange'],file_path+"_page.pdf"))
         if exe.read() != '':
-            str1 += "截取页数失败了哎，你输入格式对嘛<br>\n"
-            str1 += "像这样:<br>\n"
-            str1 += "1-5,9,10-20<br>\n"
+            str1 += "截取页数失败了哎，你输入格式对嘛\n"
+            str1 += "像这样:\n"
+            str1 += "1-5,9,10-20\n"
             if del_after_print:
                 del_all_files(tempfile)# 这个是删除中间文件，不包含在数据库的
                 file_manager_del(request.cookies.get('dayi-cookie-for-uploads'),file_uuid)
-                str1 += "已经为您把处理过程中产生的中间文件删除<br>\n"
+                str1 += "已经为您把处理过程中产生的中间文件删除\n"
             file_path = file_path+"_page.pdf"
             tempfile.append(file_path)
             return jsonify({'code': 413,'info':str1})
@@ -124,7 +124,7 @@ def json_form_accept():
     del_all_files(tempfile)
     if del_after_print:
         file_manager_del(request.cookies.get('dayi-cookie-for-uploads'),file_uuid)
-        str1 += "已经为您把处理过程中产生的中间文件删除<br>\n"
+        str1 += "已经为您把处理过程中产生的中间文件删除\n"
 
     return jsonify({'code': 201,'info':str1})
 
