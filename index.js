@@ -2,7 +2,6 @@ const http = require('http');
 const httpProxy = require('http-proxy');
 const fs = require('fs');
 
-
 // 创建代理服务器实例
 const proxy = httpProxy.createProxyServer({});
 
@@ -49,12 +48,20 @@ const server = http.createServer((req, res) => {
     res.end('[Proxy-server]404 Not Found\n');
     return;
   }
+
   // 转发请求到代理目标
   proxy.web(req, res, {target});
+
   // 显示实时日志
   console.log(`${new Date().toLocaleString()} : ${req.method} ${req.url} -> ${target} not really code:${res.statusCode}`);
 });
 
+// 添加错误处理监听器
+proxy.on('error', (error, req, res) => {
+  console.log(`${new Date().toLocaleString()} Error proxying ${req.method} ${req.url} to ${req.target}: ${error.message}`);
+  res.writeHead(500, {'Content-Type': 'text/plain'});
+  res.end(`${new Date().toLocaleString()}Error proxying ${req.method} ${req.url} to ${req.target}: ${error.message}\n`);
+  });
 // 启动服务器
 server.listen(port, () => {
   console.log(`http://localhost:${port}`)
