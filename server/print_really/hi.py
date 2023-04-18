@@ -73,7 +73,7 @@ def json_form_accept():
     if file_path == 'Error':
         str1 += '大黑阔？<br>\n'
         return jsonify({'code': 412,'info':str1})
-    tempfile.append(file_path)
+    # tempfile.append(file_path) # 这个是记录在数据库的，不能删
 
     if ispic(file_path):
                 str1+="[dayi]检测到了你上传了图片文件，正在暴力转为pdf<br>\n"
@@ -111,7 +111,8 @@ def json_form_accept():
             str1 += "像这样:<br>\n"
             str1 += "1-5,9,10-20<br>\n"
             if del_after_print:
-                del_all_files(tempfile)
+                del_all_files(tempfile)# 这个是删除中间文件，不包含在数据库的
+                file_manager_del(request.cookies.get('dayi-cookie-for-uploads'),file_uuid)
                 str1 += "已经为您把处理过程中产生的中间文件删除<br>\n"
             file_path = file_path+"_page.pdf"
             tempfile.append(file_path)
@@ -120,8 +121,9 @@ def json_form_accept():
     print_info=print_file(file_path)#打印
     str1 += print_info
 
+    del_all_files(tempfile)
     if del_after_print:
-        del_all_files(tempfile)
+        file_manager_del(request.cookies.get('dayi-cookie-for-uploads'),file_uuid)
         str1 += "已经为您把处理过程中产生的中间文件删除<br>\n"
 
     return jsonify({'code': 201,'info':str1})
@@ -133,6 +135,13 @@ def del_all_files(files):
         except:
             pass
 
+def file_manager_del(dayi_cookie,file):
+    cookies = {'dayi-cookie-for-uploads':dayi_cookie}
+    r = requests.get("http://127.0.0.1:3000/api/delete_file/".format(file),cookies=cookies)
+    if r.json()['code'] != 201 :
+        return False
+    return True
+
 def get_file_path(dayi_cookie,uuid):
     cookies = {'dayi-cookie-for-uploads':dayi_cookie}
     r = requests.get("http://127.0.0.1:3000/api/get_user_files",cookies=cookies)
@@ -141,7 +150,7 @@ def get_file_path(dayi_cookie,uuid):
     for l in r.json()['data']:
         if l['uuid'] == uuid:
             return l['file_path']
-            
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
