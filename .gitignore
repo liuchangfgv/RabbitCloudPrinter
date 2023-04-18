@@ -6,3 +6,5 @@ server/print_really/uploads/
 *.docx
 *.xlsx
 *.pptx
+
+node_modules/*

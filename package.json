@@ -1,0 +1,14 @@
+{
+  "name": "Rabbit-Cloud-Printer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/liuchangfgv/onlinePlayer",
+  "author": "dayi <yumibiao10@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "http-proxy": "^1.18.1"
+  },
+  "scripts": {
+    "start": "node index.js"
+  }
+}

@@ -20,6 +20,18 @@ router.get('/', function (req, res) {
   });
 })
 
+//node-index.html 主要用于反代找主页
+router.get('/node-index', function (req, res) {
+  res.writeHead(200, { 'Content-Type': 'text/html' })
+  fs.readFile('index.html', 'utf-8', function (err, data) {
+    if (err) {
+      throw err;
+    }
+    res.end(data);
+  });
+})
+
+
 
 
 // API-LOGIN
@@ -146,6 +158,11 @@ router.get('/api/get_file_path/:uuid', cookieParser(), async function (req, res,
   // 返回文件路径
   const file_path = file_info[0].file_path;
   return res.json({ code: 201, info: '获取文件路径成功', data: { file_path } })
+})
+
+// Test-server-is-running
+router.get('/api/test', cookieParser(), async function (req, res, next) {
+  return res.json({ code: 201, info: '服务器运行正常' })
 })
 
 

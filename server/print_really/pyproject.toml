@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "print-really"
+version = "0.1.0"
+description = ""
+authors = ["dayi <yumibiao10@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "print_really"}]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+aiofiles = "^23.1.0"
+flask = "^2.2.3"
+pillow = "^9.5.0"
+fpdf = "^1.7.2"
+docx2pdf = "^0.1.8"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
