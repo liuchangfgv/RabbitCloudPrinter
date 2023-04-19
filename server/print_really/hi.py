@@ -25,7 +25,7 @@ Soffice_path = 'soffice'
 # 这里填上libreoffice中soffice二进制文件的位置
 # 如果路径中含空格记得用双引号阔上
 
-ALLOWED_EXTENSIONS = set(['docx','doc','ppt','pptx','xls','xlsx','txt', 'pdf', 'jpg', 'gif', 'png', 'jpeg','bmp'])
+ALLOWED_EXTENSIONS = set(['docx','doc','ppt','pptx','xls','xlsx','txt', 'pdf', 'jpg', 'gif', 'png', 'jpeg','bmp','csv','odt'])
 ALLOWED_PICS=set(['jpg', 'gif', 'png', 'jpeg','bmp'])
 UPLOAD_FOLDER = 'uploads'
 
@@ -124,8 +124,8 @@ def json_form_accept():
             file_path=file_path_tmp
         tempfile.append(file_path)
     
-    if file_path.split('.')[-1] in ["doc","docx"]:
-        file_path = con_doc2pdf(file_path)# 这里显示Noreturn,这个函数大概率有问题
+    if file_path.split('.')[-1] in ["doc","docx","ppt","pptx","xls","xlsx","csv","odt"]:
+        file_path = con_office2pdf(file_path)
         tempfile.append(file_path)
     
     if is_bw:
@@ -235,7 +235,7 @@ def con2BW(allfilepath):
 
 
 # 转换
-def con_doc2pdf(allfilepath):
+def con_office2pdf(allfilepath):
     # wdFormatPDF = 17
 
     # inputFile = os.path.abspath(allfilepath)
@@ -252,6 +252,7 @@ def con_doc2pdf(allfilepath):
     return allfilepath.split('.')[0]+".pdf"
 
 # 暂不可用
+# 已有替代，往上看
 # def con_ppt2pdf(allfilepath):
 #     wdFormatPDF = 32
 #     inputFile = os.path.abspath(allfilepath)
@@ -264,6 +265,7 @@ def con_doc2pdf(allfilepath):
 #     return allfilepath+".pdf"
 
 # # 暂不可用
+# 已有替代，往上看
 # def con_xls2pdf(allfilepath):
 #     inputFile = os.path.abspath(allfilepath)
 #     outputFile = os.path.abspath(allfilepath+".pdf")
