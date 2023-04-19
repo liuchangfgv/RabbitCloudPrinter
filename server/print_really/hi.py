@@ -247,7 +247,7 @@ def con_doc2pdf(allfilepath):
     # word.Quit()
     # return allfilepath+".pdf"
     exe = os.popen(Soffice_path + ' --headless --convert-to pdf  "{}" --outdir "{}"'.format(allfilepath,os.path.dirname(allfilepath)))
-    if exe.read() != '':
+    if 'convert' not in exe.read():
         return 'Error'
     return allfilepath.split('.')[0]+".pdf"
 
