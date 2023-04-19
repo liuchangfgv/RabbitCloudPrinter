@@ -10,7 +10,7 @@ const port = 8080;
 
 
 // 反向代理 / 和 /api-v2/ 到 Python 应用程序
-const pythonHost = 'http://localhost:5050'; // Python 应用程序的主机地址
+const pythonHost = 'http://127.0.0.1:5050'; // Python 应用程序的主机地址
 const pythonPaths = ['/api-v2/*', '/'];
 
 // 反向代理 /api 和 / 到本地主机

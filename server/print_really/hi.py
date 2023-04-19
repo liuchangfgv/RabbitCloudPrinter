@@ -382,4 +382,4 @@ if __name__ == '__main__':
     #app.debug=True
 
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-    app.run("127.0.0.1","5050",debug=True)
+    app.run("0.0.0.0","5050",debug=True)
