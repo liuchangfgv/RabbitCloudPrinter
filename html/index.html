@@ -14,31 +14,78 @@
     integrity="sha384-cLRrMq39HOZdvE0j6yBojO4+1PrHfB7a9l5qLcmRm/fiWXYY+CndJPmyu5FV/9Tw" crossorigin="anonymous" />
 
   <!-- 新的UI框架 -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic">
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic"> -->
 
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous"> -->
 
 </head>
 
-<body class="mdui-theme-primary-pink mdui-theme-accent-pink
-    mdui-bottom-nav-fixed">
+<body class="mdui-theme-primary-pink mdui-theme-accent-pink mdui-bottom-nav-fixed">
+  <!-- 引用JS -->
+  <script src="static/js/functions.js" type="text/javascript"></script>
+  
+
   <div class="mdui-toolbar mdui-color-green-600">
-    <a class="mdui-typo-title" style="font-family: Zpix,serif" href="/">打印！ -
-      你看到了吗？</a>
+    <a class="mdui-typo-title" style="font-family: Zpix,serif" href="/">兔子云印！-RCP！</a>
     <div class="mdui-toolbar-spacer"></div>
-    <a href="javascript:" class="mdui-btn mdui-btn-icon"><i class="mdui-icon
-          material-icons">refresh</i></a>
+    <a href="javascript:" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">refresh</i></a>
   </div>
+
 
   <!-- 文件管理: -->
   <!-- <iframe src="file_manger.html" height="100%" width="100%" scrolling="no" frameborder="0"> -->
-  <div class="mdui-container Custom-class-1">
+    
+    <!-- 当前登录的用户 -->
+    <div class="mdui-container">
+      <li class="mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons">error</i>
+        <div class="mdui-list-item-content">当前登录用户: <span id="user-name"></span> <br>
+        请注意，该用户名同时作为秘钥使用，如果泄露，他人可以删除/下载您的文件<br>
+        <font color="green">登录信息存储在:<b>浏览器</b>中,并与域名绑定,也就是cookie</font><br>
+        </div>
+      </li>
+    </div>
+
+    <!-- 管理菜单 -->
+    <div class="mdui-container">
+      <ul class="mdui-list" mdui-collapse="{accordion: true}" style="max-width: 360px;">
+        <li class="mdui-collapse-item">
+          <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+            <i class="mdui-list-item-icon mdui-icon material-icons">device_hub</i>
+            <div class="mdui-list-item-content">用户自我管理</div>
+            <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+          </div>
+          <br>
+          <ul class="mdui-collapse-item-body mdui-list mdui-list-dense">
+            <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" id="login-button" style="width: 150px;">手动发送登录请求</button>
+          </ul>
+          <br>
+          <ul class="mdui-collapse-item-body mdui-list mdui-list-dense">
+            <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" id="logout-button" style="width: 150px;">退出登录</button>
+          </ul>
+        </li>
+        </li>
+      </ul>
+    </div>
+
+    
+
+
+    
+  
+    <div class="mdui-container Custom-class-1">
     <div class="mdui-textfield">
+
+      <!-- <div><span>当前用户：（自动绑定到浏览器）<br> </div> -->
       <div class="Custom-class-1">
-        <h1>文件管理系统</h1>
-        <h3>当前用户：<span id="user-name"></span></h3>
-        <button id="login-button" style="width: 100px;">登录</button>
+        <!-- <h1>文件管理系统</h1> -->
+        
       </div>
+
       <hr>
+
+      
+
       <form enctype="multipart/form-data" class="Custom-class-1">
         <h2>上传文件</h2>
         <div class="Custom-class-1" style="width:400px;height:60px;border: 2px
@@ -46,13 +93,23 @@
           <input style="width:200px;border:none;" type="file" name="file">
         </div>
         <div>
-          <button id="auto-upload-button">自动上传</button>
+          <!-- <button id="auto-upload-button">自动上传</button> -->
           <button id="manual-upload-button">手动上传</button>
         </div>
       </form>
 
       <!-- 日志信息 -->
-      <textarea id="log" rows="10" cols="50"></textarea>
+      <div class="mdui-container"  style="width:400px;border: 2px solid grey;">
+        <div class="mdui-panel" mdui-panel>
+          <div class="mdui-panel-item" id="log_tab">
+            <div class="mdui-panel-item-header">上传进度</div>
+            <div class="mdui-panel-item-body">
+              <textarea id="log" rows="10" cols="30"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      
 
 
       <!-- 上传进度条 -->
@@ -65,25 +122,43 @@
       <!-- 文件列表 -->
       <hr>
       <h2>文件列表</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>文件名</th>
-            <th>大小</th>
-            <th>路径</th>
-            <th>文件UUID</th>
-            <th>操作</th>
-            <th>操作</th>
-            <th>操作</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody id="file-list">
-        </tbody>
-        <!-- 文件选择框 -->
-      </table>
-      <hr>
-      <!-- 文件列表 -->
+
+      
+      
+        
+      
+      <div>
+        <div class="mdui-table-fluid">
+        <!-- <ul class="mdui-list" style="max-width: 360px;"> -->
+        <!-- <li class="mdui-subheader-inset">Files</li> -->
+        
+        <table >
+          <thead>
+            <li class="mdui-list-item">
+              <tr>
+                <th>文件名</th>
+                <th>大小</th>
+                <th>路径</th>
+                <th>文件UUID</th>
+                <th>操作</th>
+                <th>操作</th>
+                <th>操作</th>
+                <th>操作</th>
+              </tr>
+            </li>
+            
+          </thead>
+          <tbody id="file-list">
+          </tbody>
+          <!-- 文件选择框 -->
+        </table>
+        <hr>
+        <!-- 文件列表 -->
+      </div>
+    <!-- </ul> -->
+    <!-- </div> -->
+  <!-- </div> -->
+
 
 
       <!-- 选择文件 -->
@@ -258,20 +333,7 @@ selected_file_Btn.addEventListener('click', () => {
           }
 
         
-        // 下载文件
-        function downloadFile(uuid) {
-          window.location.href = '/api/download_file/' + uuid;
-        }
-        // 格式化文件大小
-        function formatFileSize(size) {
-          if (size < 1024) {
-            return size + ' B'
-          } else if (size < 1024 * 1024) {
-            return (size / 1024).toFixed(2) + ' KB'
-          } else {
-            return (size / (1024 * 1024)).toFixed(2) + ' MB'
-          }
-        }
+
 
         // 删除文件
         function deleteFile(uuid) {
@@ -380,11 +442,14 @@ selected_file_Btn.addEventListener('click', () => {
         });
       </script>
       <script>
+        
         // 日志信息
-        const logTextarea = document.getElementById('log');
-        function log(message) {
-          logTextarea.value += message + '\n';
-        }
+const logTextarea = document.getElementById('log');
+function log(message) {
+  logTextarea.value += `${new Date().toLocaleString()} :` + message + '\n';
+  const log_tab = document.getElementById('log-tab')
+  log_tab.className += 'mdui-panel-item-header'
+}
 
         function uploadFile(formData) {
           const xhr = new XMLHttpRequest();
