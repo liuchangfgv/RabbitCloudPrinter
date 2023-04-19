@@ -14,7 +14,7 @@
     integrity="sha384-cLRrMq39HOZdvE0j6yBojO4+1PrHfB7a9l5qLcmRm/fiWXYY+CndJPmyu5FV/9Tw" crossorigin="anonymous" />
 
   <!-- 新的UI框架 -->
-  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic"> -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic">
 
   <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous"> -->
 
@@ -163,7 +163,7 @@
 
       <!-- 选择文件 -->
       <!-- 添加一个按钮或者表单元素 -->
-      <button id="choose-file-button">选择文件</button>
+      <!-- <button id="choose-file-button">选择文件</button> -->
 
       <!-- 在页面中显示当前选择的文件信息 -->
       <div id="selected-file-info"></div>
@@ -500,13 +500,13 @@ function log(message) {
       <form class="Custom-class-1" id="myForm" action="./uploader" method="POST" enctype="multipart/form-data">
         <!-- 文件选择框 -->
         <div>
-          <label class="Custom-class-1">
+          <!-- <label class="Custom-class-1">
             <h3>选择文件：</h3>
             <div class="Custom-class-1" style="width:400px;height:60px;border: 2px
             solid grey;">
               <input style="width:200px;border:none;" type="file" name="file">
             </div>
-          </label>
+          </label> -->
         </div>
 
         <!-- 黑白打印选项 -->
@@ -535,11 +535,10 @@ function log(message) {
         <!-- 自定义页码范围选项 -->
         <div>
           <label class="Custom-class-1">
-            自定义页码范围：
-            <input style="width:400px" z id="pageRange" name="pageRange" type="text" placeholder="例如：1-5,7,10-12">
+            自定义页码范围：<input style="width:400px" z id="pageRange" name="pageRange" type="text" placeholder="例如：1-5,7,10-12">
           </label>
         </div>
-        <button style="width: 100px;" type="submit">上传</button>
+        <button style="width: 100px;" type="submit">提交打印请求</button>
     </div>
 
     <!-- 服务器实时状态 -->
