@@ -81,7 +81,7 @@
 
     
   
-    <div class="mdui-container Custom-class-1">
+    <div class="mdui-container ">
     <div class="mdui-textfield">
 
       <!-- <div><span>当前用户：（自动绑定到浏览器）<br> </div> -->
@@ -94,14 +94,14 @@
 
       
 
-      <form enctype="multipart/form-data" class="Custom-class-1">
+      <form enctype="multipart/form-data" >
         <h2>上传文件</h2>
-        <div class="Custom-class-1" style="width:400px;height:60px;border: 2px
+        <div class="multipart-top" style="width:400px;height:60px;border: 2px
             solid grey;">
             
           <input style="width:200px;border:none;" type="file" name="file">
           
-        </div><button id="manual-upload-button">上传</button>
+        </div><button id="manual-upload-button" class="mybutton">上传</button>
         <div>
           <!-- <button id="auto-upload-button">自动上传</button> -->
           
@@ -109,7 +109,7 @@
       </form>
 
       <!-- 日志信息 -->
-      <div class="mdui-container"  style="width:400px;border: 2px solid grey;">
+      <div class="multipart-top-left" style="width:400px;border: 2px solid grey; height: 60px;">
         <div class="mdui-panel" mdui-panel>
           <div class="mdui-panel-item mdui-panel-item-open" id="log_tab">
             <div class="mdui-panel-item-header">上传进度</div>
@@ -124,7 +124,7 @@
 
       <!-- 上传进度条 -->
       <div id="progress-div" style="display: none;">
-        <div id="progress-bar" style="background-color: #4CAF50; height: 20px;
+        <div id="progress-bar" style="background-color: #4CAF50; height: 50px;
             width: 0%;"></div>
       </div>
 
@@ -143,7 +143,7 @@
         <!-- <ul class="mdui-list" style="max-width: 360px;"> -->
         <!-- <li class="mdui-subheader-inset">Files</li> -->
         
-        <table >
+        <table style="width: 100%;">
           <thead>
             <li class="mdui-list-item">
               <tr>
@@ -152,9 +152,9 @@
                 <th>大小</th>
                 <!-- <th>路径</th> -->
                 <th>文件UUID</th>
-                <th>操作</th>
-                <th>操作</th>
-                <th>操作</th>
+                <th style="width: 150px;">操作</th>
+                <th style="width: 150px;">操作</th>
+                <th style="width: 150px;">操作</th>
                 <!-- <th>操作</th>
                 <th>操作</th> -->
               </tr>
@@ -331,6 +331,8 @@
           const formData = new FormData();
           formData.append('file', file);
           uploadFile(formData);
+          fetchUserFiles();
+          windows.location.reload();
         });
       </script>
       <script>
@@ -431,7 +433,7 @@ function log(message) {
             自定义页码范围：<input style="width:400px" z id="pageRange" name="pageRange" type="text" placeholder="例如：1-5,7,10-12">
           </label>
         </div>
-        <button id="submitButton" style="width: 100px;" type="submit">提交打印请求</button>
+        <button id="submitButton" style="width: 150px;" type="submit">提交打印请求</button>
     </div>
 
     <div>
@@ -444,8 +446,8 @@ function log(message) {
     <div class="mdui-container Custom-class-1" style="padding-top:50px;">
       <div class="mdui-textfield">
         <div>
-          <a>实时打印信息:</a>
-          <div id="print-info">获取中...</div>
+          <a class="Custom-class-1">实时打印信息:</a>
+          <div id="print-info" class="Custom-class-1">获取中...</div>
           <a class="Custom-class-1">
             <div>python服务器实时时间:</div>
             <div id="dayi-time">正在获取时间...</div>
@@ -608,6 +610,30 @@ function log(message) {
     /*在主轴上居中*/
     align-items: center;
     /*在侧轴上居中*/
+  }
+  .multipart-top{
+    display: flex;
+    flex-direction: column;
+    /*设置主轴为竖直方向*/
+    justify-content: center;
+    /*在主轴上居中*/
+    
+  }
+  .mdui-textfield{
+    margin-left: 0px;
+  }
+  .multipart-top-left{
+    position: absolute;
+    margin-top: -112px;
+    right: 0%;
+   
+  }
+  .mybutton{
+    margin-top: 10px;
+    width: 400px;
+  }
+  body{
+    min-width: 1100px;
   }
 </style>
 
