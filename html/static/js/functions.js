@@ -149,7 +149,7 @@ function fetchUserFiles() {
             selectedFilePath = file.file_path
             //显示当前的UUID
             document.getElementById('selected-file-uuid').innerText =
-            "您选择的文件UUID为:"
+            "您选择的文件UUID为:"+
                 selectedUUID + '\n文件名、文件路径:' + selectedFilePath;
             console.log(selectedUUID)
             

@@ -513,7 +513,16 @@ function log(message) {
           
           return response.json();
         }).then(data => {
-          alert(JSON.stringify(data))
+
+
+          var out_str = data['info']
+          var title_str = '<font color=\"green\">打印请求发送成功</font>';
+          mdui.alert(out_str, title_str, function () {
+            //document.getElementById("dayi-upload-finsh-html2").innerHTML = out_str;
+            //document.getElementById("dayi-upload-finsh-html2").innerHTML += '<font color=\"orange\">如果需要删除文件请点击下面的杀马特按钮，或者联系dayi</font>'
+          })
+
+          //alert(JSON.stringify(data))
           console.log(data);
           document.getElementById('submitButton').disabled = false;
           document.getElementById('feedbackText').textContent = '处理完成 o(*≧▽≦)ツ┏━┓';
