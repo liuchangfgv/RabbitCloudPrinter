@@ -534,7 +534,7 @@ function log(message) {
 
         <!-- 自定义页码范围选项 -->
         <div>
-          <label class="Custom-class-1">
+          <label id="printRange" hidden class="Custom-class-1">
             自定义页码范围：<input style="width:400px" z id="pageRange" name="pageRange" type="text" placeholder="例如：1-5,7,10-12">
           </label>
         </div>
@@ -562,7 +562,17 @@ function log(message) {
     </div>
     <!-- 服务器实时状态 -->
 
-
+    <!-- 自动显示/隐藏页码选择框 -->
+    <script>
+      document.getElementById('printAllPages').addEventListener('change', function() {
+        if (this.checked) {
+          document.getElementById('printRange').hidden = true;
+        } else {
+          document.getElementById('printRange').hidden = false;
+        }
+      });
+          </script>
+    <!-- 自动显示/隐藏页码选择框 -->
 
     <!-- 获得表单数据 -->
     <script>
