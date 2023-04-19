@@ -612,34 +612,14 @@ function log(message) {
       }
     </script>
 
+
     <!-- 实时打印状态显示 -->
     <div class="mdui-container">
       <div class="mdui-textfield">
     <div>
       <script>
-          // 定义请求 API 的函数
-          function getPrintInfo() {
-              var xhr = new XMLHttpRequest();
-              xhr.onreadystatechange = function() {
-                  if (this.readyState == 4 && this.status == 200) {
-                      var data = JSON.parse(this.responseText);
-                      if (data.code == "201") {
-                          // 更新页面上的打印信息
-                          var printInfoDiv = document.getElementById("print-info");
-                          printInfoDiv.innerHTML = "";
-                          for (var i = 0; i < data.data.length; i++) {
-                              var p = document.createElement("p");
-                              p.innerText = data.data[i];
-                              printInfoDiv.appendChild(p);
-                          }
-                      }
-                  }
-              };
-              xhr.open("GET", "/api-v2/realtime-print-info", true);
-              xhr.send();
-          }
-          // 每 2 秒钟请求一次 API
-          setInterval(getPrintInfo, 2000);
+          
+        setInterval(getPrintInfo, 2000);
     </script>
     </div></div></div>
     
@@ -649,20 +629,7 @@ function log(message) {
       <div class="mdui-textfield">
         <div>
           <script>
-            function checkServerStatus() {
-              const st = document.getElementById('node-status')
-              fetch('/api/test').then(response => response.json())
-                .then(data => {
-                  if (data.code == 201) {
-                    st.innerText = '文件服务器运行正常 √';
-                  } else {
-                    st.innerText = '文件服务器运行异常 ×';
-                  }
-                })
-                .catch(error => {
-                  st.innerText = '请求服务器出错 ×，文件服务器运行异常 ×';
-                });
-            }
+            
             setInterval(checkServerStatus, 5000);
             checkServerStatus();
           </script>
@@ -700,17 +667,7 @@ function log(message) {
 
     <!-- 获得实时时间 -->
     <script>
-      const timeDiv = document.getElementById("dayi-time");
-      setInterval(() => {
-        fetch("./api-v2/time")
-          .then(response => response.json())
-          .then(data => {
-            // console.log(data);
-            const time = data.data[0];
-            timeDiv.innerText = time;
-          })
-          .catch(error => console.error(error));
-      }, 1000);
+        setInterval(getCurrentTime, 1000);
     </script>
     <!-- 获得实时时间 -->
 
