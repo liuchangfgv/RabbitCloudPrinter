@@ -15,9 +15,14 @@
 ## 安装
 
 1. 解压项目文件，最好不要有中文目录
+
 2. 运行install_server.cmd
-  
-  
+
+   有一个包可能下载比较慢
+
+   ![image-20230419213044166](https://p.dabbit.net/blog/pic_bed/2023/04/1af78fed4dc2ab27_202304192130269.png)
+
+
 ## 运行 
 
 1. 运行run_server.cmd
