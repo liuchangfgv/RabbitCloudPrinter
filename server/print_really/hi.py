@@ -109,14 +109,14 @@ def json_form_accept():
     # tempfile.append(file_path) # 这个是记录在数据库的，不能删
 
     if ispic(file_path):
-                str1+="[dayi]检测到了你上传了图片文件，正在暴力转为pdf\n"
-                file_path_tmp=file_path
-                file_path=con_pic2pdf(file_path)
-                if(file_path == "[error]"):
-                    str1+="[error!!]转换pdf失败，你这是图片还是啥？\n"
-                    str1+="[error!!]我也不知道咋了这是，给你继续执行了吧\n"
-                    file_path=file_path_tmp
-                tempfile.append(file_path)
+        str1+="[dayi]检测到了你上传了图片文件，正在暴力转为pdf\n"
+        file_path_tmp=file_path
+        file_path=con_pic2pdf(file_path)
+        if(file_path == "[error]"):
+            str1+="[error!!]转换pdf失败，你这是图片还是啥？\n"
+            str1+="[error!!]我也不知道咋了这是，给你继续执行了吧\n"
+            file_path=file_path_tmp
+        tempfile.append(file_path)
     
     if file_path.split('.')[-1] in ["doc","docx"]:
         file_path = con_doc2pdf(file_path)# 这里显示Noreturn,这个函数大概率有问题
@@ -145,19 +145,17 @@ def json_form_accept():
             str1 += "1-5,9,10-20\n"
             if del_after_print:
                 del_all_files(tempfile)# 这个是删除中间文件，不包含在数据库的
-                file_manager_del(request.cookies.get('dayi-cookie-for-uploads'),file_uuid)
                 str1 += "已经为您把处理过程中产生的中间文件删除\n"
-            file_path = file_path+"_page.pdf"
-            tempfile.append(file_path)
             return jsonify({'code': 413,'info':str1})
+        file_path = file_path+"_page.pdf"
+        tempfile.append(file_path)
     
     print_info=print_file(file_path)#打印
     str1 += print_info
 
-    del_all_files(tempfile)
-    if del_after_print:
-        file_manager_del(request.cookies.get('dayi-cookie-for-uploads'),file_uuid)
-        str1 += "已经为您把处理过程中产生的中间文件删除\n"
+    del_all_files(tempfile[:-1])
+    # TODO: 在打印完后删除最后一个中间文件，上面这里如果直接传递全部会出现打印机找不到文件的bug
+    str1 += "已经为您把处理过程中产生的中间文件删除\n"
 
     return jsonify({'code': 201,'info':str1})
 
