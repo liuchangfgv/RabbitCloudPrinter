@@ -19,6 +19,12 @@ AUTH_key="/Auth_dayi_Owo_key"
 AUTH_key="" #临时禁用AUTH_key
 
 
+Convert_path = 'convert'
+# 这里填上imagemagick中convert二进制文件的位置
+Soffice_path = 'soffice'
+# 这里填上libreoffice中soffice二进制文件的位置
+# 如果路径中含空格记得用双引号阔上
+
 ALLOWED_EXTENSIONS = set(['docx','doc','ppt','pptx','xls','xlsx','txt', 'pdf', 'jpg', 'gif', 'png', 'jpeg','bmp'])
 ALLOWED_PICS=set(['jpg', 'gif', 'png', 'jpeg','bmp'])
 UPLOAD_FOLDER = 'uploads'
@@ -137,8 +143,8 @@ def json_form_accept():
                 file_path = file_path_tmp
                 tempfile.append(file_path)
     
-    if not pr_all:
-        exe = os.popen('convert -density 300 "{}"[{}] "{}"'.format(file_path,json_data['data']['pageRange'],file_path+"_page.pdf"))
+    if not pr_all and file_path.split('.')[-1] == 'pdf':
+        exe = os.popen(Convert_path+' -density 300 "{}"[{}] "{}"'.format(file_path,json_data['data']['pageRange'],file_path+"_page.pdf"))
         if exe.read() != '':
             str1 += "截取页数失败了哎，你输入格式对嘛\n"
             str1 += "像这样:\n"
@@ -222,7 +228,7 @@ def con_pic2pdf(allfilepath):
 
 # 将文档转化为黑白色
 def con2BW(allfilepath):
-    exe = os.popen('convert -density 300 {} -type Grayscale {}'.format(allfilepath,allfilepath+"_BW.pdf"))
+    exe = os.popen(Convert_path + ' -density 300 "{}" -type Grayscale "{}"'.format(allfilepath,allfilepath+"_BW.pdf"))
     if exe.read() != '':
         return 'Error'
     return allfilepath+"_BW.pdf"
@@ -240,9 +246,10 @@ def con_doc2pdf(allfilepath):
     # doc.Close()
     # word.Quit()
     # return allfilepath+".pdf"
-    doc2pdf(allfilepath,allfilepath+".pdf")
-    os.remove(allfilepath)
-    return allfilepath+".pdf"
+    exe = os.popen(Soffice_path + ' --headless --convert-to pdf  "{}" --outdir "{}"'.format(allfilepath,os.path.dirname(allfilepath)))
+    if exe.read() != '':
+        return 'Error'
+    return allfilepath.split('.')[0]+".pdf"
 
 # 暂不可用
 # def con_ppt2pdf(allfilepath):
@@ -286,7 +293,7 @@ def con_txt2pdf(allfilepath):
     #     os.remove("temp{}.png".format(i))
     # pdf.output(allfilepath+".pdf", "F")
     # F**k you fpdf
-    exe = os.popen('convert -density 300 {} {}'.format(allfilepath,allfilepath+".pdf"))
+    exe = os.popen(Convert_path + ' -density 300 "{}" "{}"'.format(allfilepath,allfilepath+".pdf"))
     if exe.read() != '':
         return 'Error'
     try:
