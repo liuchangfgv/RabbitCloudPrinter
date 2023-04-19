@@ -10,6 +10,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "aspose-words"
+version = "23.4.0"
+requires_python = ">=3.5,<3.12"
+summary = "Aspose.Words for Python is a Document Processing library that allows developers to work with documents in many popular formats without needing Office Automation."
+
+[[package]]
 name = "certifi"
 version = "2022.12.7"
 requires_python = ">=3.6"
@@ -167,7 +173,7 @@ summary = "Backport of pathlib-compatible object wrapper for zip files"
 [metadata]
 lock_version = "4.2"
 groups = ["default"]
-content_hash = "sha256:6fea188a556c98ea6f95dd2492e9947bab46dd9cc27b626b11cebe331585c40b"
+content_hash = "sha256:63c3b9ff6cfa4bcdab7282d45df12174a57dd16a6e1bb33f473651d53c4102a4"
 
 [metadata.files]
 "appscript 1.2.2" = [
@@ -181,6 +187,11 @@ content_hash = "sha256:6fea188a556c98ea6f95dd2492e9947bab46dd9cc27b626b11cebe331
     {url = "https://files.pythonhosted.org/packages/b1/05/d663216ebd1f3cac1725a10507fa88832bb86265ef7d55e28f2af18e5bf0/appscript-1.2.2-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:bd141cb87cd54813ef19907fb017cc375d245f776e9e7602dc8d559d0e379827"},
     {url = "https://files.pythonhosted.org/packages/d2/1d/d724809a0f430cbb00d396c1156ac4d20dd91253678386c9e80e84768acb/appscript-1.2.2-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:1a57ae62e1f2ffdb3d8ddd387a2ba2cc9863994d939307e68ad2fa2f9b24a3dd"},
     {url = "https://files.pythonhosted.org/packages/d8/d6/a480492a61eee2ebad09237368a09acfd9672a63ed9f943baedb878bf8de/appscript-1.2.2-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:fb6bfcaea9fc7b47e36c5594ab863b536a5914bfdf1ff5e8571b8b1d1f877cdd"},
+]
+"aspose-words 23.4.0" = [
+    {url = "https://files.pythonhosted.org/packages/28/15/3f0f56ed63530cab613698fc7b60a476c0b42d956079e39da442fb086e2c/aspose_words-23.4.0-py3-none-win_amd64.whl", hash = "sha256:c91db8adc81eddc5c961635f1674098fd85193745f34b1ed1f4e15f7543d2740"},
+    {url = "https://files.pythonhosted.org/packages/48/e2/95130786feb75796952281f321ee5b54d2f43db98bd4a0f0f6f61cf5a7a4/aspose_words-23.4.0-py3-none-manylinux1_x86_64.whl", hash = "sha256:471d9e8fa7fda9bf89bc513607f64ce3e5c4fe68956c04c438d7fe9cf7a8a27c"},
+    {url = "https://files.pythonhosted.org/packages/d3/11/d9b6b6340f9ab7c0389f646d0795f1dc82734379c29fba504773f867bace/aspose_words-23.4.0-py3-none-win32.whl", hash = "sha256:4b280b49a2ae3a0e7effca14523f69603cf679da9a24f9d210f08608d15fd072"},
 ]
 "certifi 2022.12.7" = [
     {url = "https://files.pythonhosted.org/packages/37/f7/2b1b0ec44fdc30a3d31dfebe52226be9ddc40cd6c0f34ffc8923ba423b69/certifi-2022.12.7.tar.gz", hash = "sha256:35824b4c3a97115964b408844d64aa14db1cc518f6562e8d7261699d1350a9e3"},

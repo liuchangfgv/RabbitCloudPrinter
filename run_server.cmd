@@ -15,6 +15,11 @@ cd server/file_manager/
 start yarn start
 
 
+@REM for debug
+start http://localhost:8080
+
 echo Starting index.js...
 cd ..\..
 yarn start
+
+
