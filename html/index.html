@@ -538,8 +538,14 @@ function log(message) {
             自定义页码范围：<input style="width:400px" z id="pageRange" name="pageRange" type="text" placeholder="例如：1-5,7,10-12">
           </label>
         </div>
-        <button style="width: 100px;" type="submit">提交打印请求</button>
+        <button id="submitButton" style="width: 100px;" type="submit">提交打印请求</button>
     </div>
+
+    <div>
+      <label id="feedback" class="Custom-class-1">
+         <p id="feedbackText"></p>
+      </label>
+   </div>
 
     <!-- 服务器实时状态 -->
     <div class="mdui-container Custom-class-1" style="padding-top:50px;">
@@ -580,6 +586,8 @@ function log(message) {
       const form = document.getElementById("myForm");
       form.addEventListener("submit", submitForm);
       function submitForm() {
+        document.getElementById('submitButton').disabled = true;
+        document.getElementById('feedbackText').textContent = '请稍候...';
         event.preventDefault();
         const form = document.getElementById("myForm");
         const formData = new FormData(form);
@@ -614,9 +622,13 @@ function log(message) {
         }).then(data => {
           alert(JSON.stringify(data))
           console.log(data);
+          document.getElementById('submitButton').disabled = false;
+          document.getElementById('feedbackText').textContent = '处理完成 o(*≧▽≦)ツ┏━┓';
         }).catch(error => {
           alert(JSON.stringify(error))
           console.error(error);
+          document.getElementById('submitButton').disabled = false;
+          document.getElementById('feedbackText').textContent = '失败了 Σ( ° △ °|||)︴';
         });
       }
     </script>
