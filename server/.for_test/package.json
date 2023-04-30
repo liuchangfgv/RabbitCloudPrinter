@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "libreoffice-convert": "^1.4.1"
+    "libreoffice-convert": "^1.4.1",
+    "node-printer": "^1.0.4"
   }
 }

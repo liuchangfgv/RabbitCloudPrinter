@@ -1,4 +1,4 @@
-import os
+import os,logging
 from flask import Flask, request, redirect, url_for, render_template
 from flask import jsonify
 from werkzeug.utils import secure_filename
@@ -10,13 +10,16 @@ from PIL import Image
 from docx2pdf import convert as doc2pdf
 # import fitz
 import requests
-import win32print
+# 
 
 app = Flask(__name__)
+app.logger.setLevel(logging.INFO)
+
 
 #config
-AUTH_key="/Auth_dayi_Owo_key" 
-AUTH_key="" #临时禁用AUTH_key
+from config.configs import AUTH_key
+# AUTH_key="/Auth_dayi_Owo_key" 
+# AUTH_key="" #临时禁用AUTH_key
 
 
 Convert_path = 'convert'
@@ -36,51 +39,19 @@ def upload_file():
     return render_template("upload.html",str_time=web_str_time)
 
 
-"""
-接口返回信息:
-{code:"201",data:["2021-03-03 19:23"]}
-#显示服务器实时时间
-"""
-@app.route(AUTH_key+"/api-v2/time", methods=['GET'])
-def api_v2_time():
-    current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    response_data = {
-        "code": "201",
-        "data": [current_time]
-    }
-    return jsonify(response_data)
 
-"""
-接口返回信息:
-{code:"201",data:["2021-03-03 19:23"]}
-#显示实时的打印信息
-"""
-@app.route(AUTH_key+"/api-v2/realtime-print-info", methods=['GET'])
-def api_v2_print_realtime():
-    def get_info():
-        res = []
-        printer_name = win32print.GetDefaultPrinter()  # 获取默认打印机名称
-        h_printer = win32print.OpenPrinter(printer_name)  # 打开打印机句柄
-        # 获取打印机中所有作业
-        jobs = win32print.EnumJobs(h_printer, 0, -1, 1)
-        for job in jobs:
-            job_id, job_status = job["JobId"], job["Status"]
-            pages_printed, total_pages = job["PagesPrinted"], job["TotalPages"]
-            if total_pages > 0:
-                progress = int(pages_printed / total_pages * 100)
-                res.append( f"作业ID：{job_id}，进度：{progress}%，状态：{job_status}")
-                
-            else:
-                res.append(f"作业ID：{job_id}，进度：未知，状态：{job_status}")
-        win32print.ClosePrinter(h_printer)  # 关闭打印机句柄
-        return res
+#=============================#
+# 插件加载测试开始
+import plugins as plugins #导入插件
+def load_plugins():
+    # plugins.register_plugins(app)
+    plugins.register_api_plugins(app)
 
-    current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    response_data = {
-        "code": "201",
-        "data": get_info()
-    }
-    return jsonify(response_data)
+
+# 插件加载测试结束
+#=============================#
+
+
 
 
 """
@@ -306,80 +277,19 @@ def con_txt2pdf(allfilepath):
     return
     
 
-@app.route(AUTH_key+'/uploader',methods=['GET','POST'])
-def upload_file_1():
-    if request.method == 'POST':
-        file = request.files['file']
-        if file and allowed_file(file.filename):
-            #filename = secure_filename(file.filename)
-            #获得文件名
-            filename=file.filename
-            
-            #获得全路径
-            basedir = os.path.abspath(os.path.dirname(__file__))
-            #生成随机时间
-            randname=time.strftime("%Y.%m.%d.%H.%M.%S", time.localtime())+str(random.randint(1,233333))
-            #来个文件名
-            file_dir = os.path.join(app.config['UPLOAD_FOLDER'],randname+"_"+filename)
-            #try:
-            file.save(file_dir)
-            all_path=basedir+"\\"+file_dir #全部目录
-            str1="上传文件成功! <br>\n"+"文件目录:" +all_path+"<br>正在尝试打印:"+"<br>"
 
-            if ispic(all_path):
-                str1+="[dayi]检测到了你上传了图片文件，正在暴力转为pdf<br>\n"
-                all_path_tmp=all_path
-                all_path=con_pic2pdf(all_path)
-                if(all_path=="[error]"):
-                    str1+="[error!!]转换pdf失败，你这是图片还是啥？<br>\n"
-                    str1+="[error!!]我也不知道咋了这是，给你继续执行了吧<br>\n"
-                    all_path=all_path_tmp
-            
-            if all_path.split('.')[-1] in ["doc","docx"]:
-                all_path = con_doc2pdf(all_path)
-
-            # if all_path.split('.')[-1] in ["ppt","pptx"]:
-            #     all_path = con_ppt2pdf(all_path)
-
-            # if all_path.split('.')[-1] in ["xls","xlsx"]:
-            #     all_path = con_xls2pdf(all_path)
-            # 暂时还没实现
-
-            if all_path.split('.')[-1] == "txt":
-                all_path = con_txt2pdf(all_path)
-
-            if request.form.get("blackAndWhitePrinting"):
-                str1 += "正在将文档转化为黑白<br\n>"
-                if all_path.split('.')[-1] != "pdf":
-                    str1 += "你上传的格式暂时不支持黑白打印，已经跳过文档处理<br>\n"
-                else:
-                    all_path = con2BW(all_path)
-                    if all_path == 'Error':
-                        str1 += '转换失败了<br\n>'
-                        return render_template("echo.html",echo_str=str1)
-
-            if not request.form.get("printAllPages"):
-                pass
-                # 页码选择
-
-            print_info=print_file(all_path)#打印
-
-            if request.form.get("deleteAfterPrinting"):
-                os.remove(all_path)
-
-            str1+=print_info
-            return render_template("echo.html",echo_str=str1)
-        else:
-            str1="不合法文件类型！，当前合法类型："
-            str1+=str(ALLOWED_EXTENSIONS)
-            return render_template("echo.html",echo_str=str1)
-    else:
-        return render_template('upload.html')
 
 
 
 if __name__ == '__main__':
     #app.debug=True
 
+    app.logger.setLevel(logging.INFO)
+
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+    load_plugins() #加载插件
+    
     app.run("0.0.0.0","5050",debug=True)
+
+    

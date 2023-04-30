@@ -6,7 +6,8 @@
   "author": "dayi <yumibiao10@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "http-proxy": "^1.18.1"
+    "http-proxy": "^1.18.1",
+    "nodemon": "^2.0.22"
   },
   "scripts": {
     "start": "node index.js"
