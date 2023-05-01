@@ -15,7 +15,7 @@ import os
 def register_api_plugins(app):
     plugins_dir = os.path.dirname(__file__)
     for filename in os.listdir(plugins_dir):
-        if filename.startswith('api_') and filename.endswith('.py'):
+        if (filename.startswith('api_')) and filename.endswith('.py'):
             plugin_name = filename[:-3]  # Remove the '.py' extension
             try:
                 plugin_module = importlib.import_module(f'plugins.{plugin_name}')

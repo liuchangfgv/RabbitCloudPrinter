@@ -16,10 +16,27 @@ app = Flask(__name__)
 app.logger.setLevel(logging.INFO)
 
 
-#config
+#config 配置信息
 from config.configs import AUTH_key
-# AUTH_key="/Auth_dayi_Owo_key" 
-# AUTH_key="" #临时禁用AUTH_key
+from config.configs import localhost_path
+
+#=============================#
+# 导入功能性函数
+import plugins.func.func_exec_print_command as func_exec_print_command
+#=============================#
+
+
+#=============================#
+# 自动插件加载测试开始
+import plugins as plugins #导入插件
+def load_plugins():
+    # plugins.register_plugins(app)
+    plugins.register_api_plugins(app)
+# 插件加载测试结束
+#=============================#
+
+
+
 
 
 Convert_path = 'convert'
@@ -40,16 +57,7 @@ def upload_file():
 
 
 
-#=============================#
-# 插件加载测试开始
-import plugins as plugins #导入插件
-def load_plugins():
-    # plugins.register_plugins(app)
-    plugins.register_api_plugins(app)
 
-
-# 插件加载测试结束
-#=============================#
 
 
 
@@ -127,7 +135,7 @@ def json_form_accept():
         file_path = file_path+"_page.pdf"
         tempfile.append(file_path)
     
-    print_info=print_file(file_path)#打印
+    print_info=func_exec_print_command.print_file(file_path)#打印
     str1 += print_info
 
     del_all_files(tempfile[:-1])
@@ -145,14 +153,14 @@ def del_all_files(files):
 
 def file_manager_del(dayi_cookie,file):
     cookies = {'dayi-cookie-for-uploads':dayi_cookie}
-    r = requests.get("http://127.0.0.1:3000/api/delete_file/".format(file),cookies=cookies)
+    r = requests.get(localhost_path+"/api/delete_file/".format(file),cookies=cookies)
     if r.json()['code'] != 201 :
         return False
     return True
 
 def get_file_path(dayi_cookie,uuid):
     cookies = {'dayi-cookie-for-uploads':dayi_cookie}
-    r = requests.get("http://127.0.0.1:3000/api/get_user_files",cookies=cookies)
+    r = requests.get(localhost_path+"/api/get_user_files",cookies=cookies)
     if r.json()['code'] != 201 :
         return 'Error' # No login
     for l in r.json()['data']:
@@ -163,13 +171,7 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
-# 执行打印命令,print.py [filepath]
-def print_file(filepath):
-    run_command="pdm run print.py "+filepath
-    ex = os.popen(run_command)
-    extext = ex.read()
-    ex.close()
-    return extext
+
 
 # 判断是否为图片
 def ispic(filename):
