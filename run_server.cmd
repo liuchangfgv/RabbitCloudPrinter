@@ -20,6 +20,7 @@ start http://localhost:7070
 
 echo Starting index.js...
 cd ..\..
-yarn start
+start yarn start
+
 
 
