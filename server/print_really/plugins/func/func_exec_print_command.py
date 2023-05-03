@@ -51,7 +51,23 @@ def print_file(filepath,username = "what",printerId = -1):
     ex.close()
 
     #执行异步访问API
+
+    asyncio.run(runner(filepath,username,printerId))
     
     return extext
 
     
+
+def print_with_out_auth(filepath,username = "http-api"):
+    run_command = 'pdm run ./plugins/func/print_cn.py \"{}\" \"{}\" '.format(filepath)
+    ex = os.popen(run_command)
+    extext = ex.read()
+    ex.close()
+
+    #执行异步访问API
+    
+    async def runner(filepath,username,printerId):
+        await main(filepath,username,printerId)
+    asyncio.run(runner(filepath,username,printerId))
+
+    return extext
