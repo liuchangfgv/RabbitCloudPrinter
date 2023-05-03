@@ -1,6 +1,7 @@
 import os
 import aiohttp
 import asyncio
+import requests
 
 import plugins.func.func_get_server_config as server_config 
 
@@ -13,24 +14,48 @@ async def insert_user_print_history(userName, printerId):
         result = await response.json()
         return result
 
+
+
+
+
+def check(username):
+    url = "http://localhost:{}/inside_api/check_permission/{}".format(server_config.get_server_port(), username)
+    headers = {"Authorization": server_config.get_server_api_key()}
+    response = requests.get(url, headers=headers)
+    print(response.text)
+    result = response.json()
+    if result['code'] == 201:
+        return True
+    else:
+        return False
+
+
+
 # 异步访问后端API
 async def main(filepath,username,printerId):
-    result = await insert_user_print_history(username, 123)
-    print(result)
-
+    chk  = await check(username)
+    if chk == True:
+        result = await insert_user_print_history(username, 123)
+        print(result)
+    else:
+        return {"code":401, "info":"没有权限"}
 
 # 打印文件
 def print_file(filepath,username = "what",printerId = -1):
     async def runner(filepath,username,printerId):
         await main(filepath,username,printerId)
     # 执行打印命令
-    run_command = 'pdm run ./plugins/func/print_cn.py \"{}\"'.format(filepath)
+
+    if not check(username):
+        return "<br><font color=red>\n您的权限不足，无法打印<font><br>\n"
+
+    run_command = 'pdm run ./plugins/func/print_cn.py \"{}\" \"{}\" '.format(filepath,printerId)
     ex = os.popen(run_command)
     extext = ex.read()
     ex.close()
 
     #执行异步访问API
-    asyncio.run(runner(filepath,username,printerId))
+    
     return extext
 
     

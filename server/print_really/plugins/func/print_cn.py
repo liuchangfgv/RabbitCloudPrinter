@@ -50,5 +50,7 @@ if __name__ == "__main__":
     printer_name="EPSON L3150 Series"
 
     print_file_path=sys.argv[1]
+    printer_name = sys.argv[2]
+    
     print_file(print_file_path,printer_name)
     print("------兔子云印-----","<br>")

@@ -138,8 +138,9 @@ def json_form_accept():
         file_path = file_path+"_page.pdf"
         tempfile.append(file_path)
     
-    username = request.cookies.get('dayi-cookie-for-uploads')
-    print_info=func_exec_print_command.print_file(file_path,username=username)#打印
+    username = request.cookies.get('dayi-cookie-for-uploads') # 用户名
+    printer_name = json_data['data']['printer_name'] #打印机名字
+    print_info=func_exec_print_command.print_file(file_path,username=username,printerId=printer_name)#打印
     str1 += print_info
 
     del_all_files(tempfile[:-1])

@@ -1,2 +1,5 @@
+# 内部服务器之间的通信密钥，用于认证通信，建议随机更改一个字符串
 auth_inside_server_api_key: 2f97c665-256b-43a5-a9f1-19ebb890fb76
+
+# 服务器对外的端口号
 server_port : 8080
