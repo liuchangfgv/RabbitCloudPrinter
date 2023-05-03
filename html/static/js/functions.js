@@ -52,9 +52,15 @@ function getPrintInfo() {
           // 更新页面上的打印信息
           printInfoDiv.innerHTML = '';
           printInfoDiv.innerHTML = "当前打印机:" + printerName + "<br>";
+          
           for (var i = 0; i < data.data.length; i++) {
             var p = document.createElement('p');
             p.innerText = data.data[i];
+            printInfoDiv.appendChild(p);
+          }
+          if(data.data.length==0){
+            var p = document.createElement('p');
+            p.innerText = "当前打印机没有需要等待的文件哦~";
             printInfoDiv.appendChild(p);
           }
         } else {
@@ -122,6 +128,7 @@ function fetchUserFiles() {
     .then(data => {
       var index = 0;
       if (data.code == 201) {
+        var file_index = 0;
         const fileList = document.getElementById('file-list')
         fileList.innerHTML = ''
         const files = data.data
@@ -142,7 +149,7 @@ function fetchUserFiles() {
 
           //文件序号
           const indexCell = document.createElement('td')
-          indexCell.innerText = index + 1  // <-- 添加序号
+          indexCell.innerText = ++file_index  // <-- 添加序号
 
           //文件选择
           const selected_file_cell = document.createElement('td')

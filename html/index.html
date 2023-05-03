@@ -194,27 +194,27 @@
           const chooseFileButton = document.getElementById('choose-file-button');
           //const selectedFileInfo = document.getElementById('selected-file-info');
 
-          // 监听按钮的点击事件
-          chooseFileButton.addEventListener('click', () => {
-            // 创建一个 <input type="file"> 元素
-            const fileInput = document.createElement('input');
-            fileInput.type = 'file';
+ //        // 监听按钮的点击事件
+ //        chooseFileButton.addEventListener('click', () => {
+ //          // 创建一个 <input type="file"> 元素
+ //          const fileInput = document.createElement('input');
+ //          fileInput.type = 'file';
 
-            // 监听文件选择事件
-            fileInput.addEventListener('change', () => {
-              const selectedFile = fileInput.files[0]; // 获取用户选择的文件
-              // 在页面中显示文件信息
-              selectedFileInfo.innerHTML = `
-        <p>文件名：${selectedFile.name}</p>
-        <p>文件类型：${selectedFile.type}</p>
-        <p>文件大小：${selectedFile.size} 字节</p>
-        <p>最后修改时间：${selectedFile.lastModifiedDate}</p>
-      `;
-            });
+ //          // 监听文件选择事件
+ //          fileInput.addEventListener('change', () => {
+ //            const selectedFile = fileInput.files[0]; // 获取用户选择的文件
+ //            // 在页面中显示文件信息
+ //            selectedFileInfo.innerHTML = `
+ //      <p>文件名：${selectedFile.name}</p>
+ //      <p>文件类型：${selectedFile.type}</p>
+ //      <p>文件大小：${selectedFile.size} 字节</p>
+ //      <p>最后修改时间：${selectedFile.lastModifiedDate}</p>
+ //    `;
+ //          });
 
-            // 触发文件选择对话框
-            fileInput.click();
-          });
+ //          // 触发文件选择对话框
+ //          fileInput.click();
+ //        });
         </script>
         <!-- 选择文件 -->
 
@@ -272,20 +272,20 @@
               });
 
             // 获得用户名
-            const userLabel = document.getElementById('user-label')
-            fetch('/api/get_user_name', {
-              credentials: 'include'
-            })
-              .then(response => response.json())
-              .then(data => {
-                if (data.code == 201 || data.code == 401) {
-                  userLabel.innerText = '当前用户：' + data.user_namel;
-                  fetchUserFiles();
-                } else {
-                  alert(data.info)
-                }
-              })
-              .catch(error => console.error(error))
+//            const userLabel = document.getElementById('user-label')
+//            fetch('/api/get_user_name', {
+//              credentials: 'include'
+//            })
+//              .then(response => response.json())
+//              .then(data => {
+//                if (data.code == 201 || data.code == 401) {
+//                  userLabel.innerText = '当前用户：' + data.user_namel;
+//                  fetchUserFiles();
+//                } else {
+//                  alert(data.info)
+//                }
+//              })
+//              .catch(error => console.error(error))
 
             // 页面加载完成时获取用户文件列表
             fetchUserFiles()
@@ -336,7 +336,7 @@
             formData.append('file', file);
             uploadFile(formData);
             fetchUserFiles();
-            windows.location.reload();
+          //  windows.location.reload();
           });
         </script>
         <script>
@@ -346,7 +346,7 @@
           function log(message) {
             logTextarea.value += `${new Date().toLocaleString()} :` + message + '\n';
             const log_tab = document.getElementById('log-tab')
-            log_tab.className += 'mdui-panel-item-header'
+            //log_tab.className += 'mdui-panel-item-header'
           }
 
           function uploadFile(formData) {
@@ -368,7 +368,7 @@
               const response = JSON.parse(xhr.responseText);
               if (response.code == 201) {
                 log('上传成功');
-                fetchUserFiles();
+                fetchUserFiles();fetchUserFiles();
               } else {
                 log(`上传失败：${response.info}`);
               }
@@ -607,11 +607,11 @@
         integrity="sha384-gCMZcshYKOGRX9r6wbDrvF+TcCCswSHFucUzUPwka+Gr+uHgjlYvkABr95TCOz3A" crossorigin="anonymous">
         </script>
 
-      <script>
+      <!-- <script>
         window.addEventListener('load', function () {
           FastClick.attach(document.body);
         }, false);
-      </script>
+      </script> -->
 
 
       <!-- 获得实时时间 -->
@@ -638,9 +638,10 @@
 
   .multipart-top {
     display: flex;
+    /*
     flex-direction: column;
     /*设置主轴为竖直方向*/
-    justify-content: center;
+    /*justify-content: center;
     /*在主轴上居中*/
 
   }
