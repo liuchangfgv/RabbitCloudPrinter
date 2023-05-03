@@ -1,3 +1,4 @@
+//用户数据权限表
 const sql_table_1 = `CREATE TABLE IF NOT EXISTS users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_name TEXT NOT NULL,
@@ -9,6 +10,7 @@ const sql_table_1 = `CREATE TABLE IF NOT EXISTS users (
   permission_source TEXT NULL
 )`;
 
+//文件信息表
 const sql_table_2 = `CREATE TABLE IF NOT EXISTS files (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_name TEXT NOT NULL,
@@ -18,6 +20,7 @@ const sql_table_2 = `CREATE TABLE IF NOT EXISTS files (
   file_size REAL NULL
 )`;
 
+//实体信息表
 const sql_table_3 = `CREATE TABLE IF NOT EXISTS mp3_players (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   own_user_name TEXT NOT NULL,
