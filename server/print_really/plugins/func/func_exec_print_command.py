@@ -25,20 +25,16 @@ def check(username):
     print(response.text)
     result = response.json()
     if result['code'] == 201:
-        return True
+        return result['info']
     else:
-        return False
+        return result['info']
 
 
 
 # 异步访问后端API
 async def main(filepath,username,printerId):
-    chk  = await check(username)
-    if chk == True:
-        result = await insert_user_print_history(username, 123)
-        print(result)
-    else:
-        return {"code":401, "info":"没有权限"}
+    result = await insert_user_print_history(username, 123)
+    return result
 
 # 打印文件
 def print_file(filepath,username = "what",printerId = -1):
@@ -47,7 +43,7 @@ def print_file(filepath,username = "what",printerId = -1):
     # 执行打印命令
 
     if not check(username):
-        return "<br><font color=red>\n您的权限不足，无法打印<font><br>\n"
+        return "<br><font color=red>\n您的权限不足，无法打印</font><br>\n"
 
     run_command = 'pdm run ./plugins/func/print_cn.py \"{}\" \"{}\" '.format(filepath,printerId)
     ex = os.popen(run_command)
