@@ -57,7 +57,7 @@
 
 2. 运行install_server.cmd
 
-   有一个包可能下载比较慢
+   部分包可能因网络原因下载比较慢
 
    ![image-20230419213044166](https://p.dabbit.net/blog/pic_bed/2023/04/1af78fed4dc2ab27_202304192130269.png)
 
