@@ -31,11 +31,11 @@
 
 ## 图片
 
-![image-20230419220430855](https://p.dabbit.net/blog/pic_bed/2023/04/2cbcf267acb95bae_202304192204936.png)
+![image-20230503231300834](https://p.dabbit.net/blog/pic_bed/2023/05/a2f6ed77c57cfc5e_202305032313912.png)
 
 
 
-![image-20230419220439695](https://p.dabbit.net/blog/pic_bed/2023/04/8e4bd226d9128f8e_202304192204787.png)
+![image-20230503231309458](https://p.dabbit.net/blog/pic_bed/2023/05/77d019184e526447_202305032313527.png)
 
 # 安装文档
 

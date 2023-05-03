@@ -13,11 +13,11 @@ import time
 # 插件注册
 def register_plugin(app):
   @app.route(AUTH_key+"/api-v2/sys-info", methods=['GET'])
-  def api_v2_time():
+  def api_v2_show_sys_info():
     current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     response_data = {
         "code": "201",
-        "data": [current_time]
+        "data": "Great"
     }
     return jsonify(response_data)
 
