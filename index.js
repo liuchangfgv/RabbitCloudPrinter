@@ -64,6 +64,15 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  if (req.url === '/template.html') {
+    fs.readFile('html/template.html', (err, data) => {
+      if (err) { res.writeHead(500, { 'Content-Type': 'text/plain' }); res.end('Error reading index.html file\n'); return; }
+      res.writeHead(200, { 'Content-Type': 'text/html' });
+      res.end(data);
+    });
+    return;
+  }
+
   if(req.url === '/user_manger.html'){
     fs.readFile('html/user_manger.html', (err, data) => {
       if (err) { res.writeHead(500, { 'Content-Type': 'text/plain' }); res.end('Error reading index.html file\n'); return; }
