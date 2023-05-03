@@ -1,7 +1,7 @@
 //部分js放在这里
 
 var printerName = "" //当前选择的打印机名字
-
+var selectedFiles = [];
 
 // 下载文件
 function downloadFile(uuid) {
@@ -46,19 +46,19 @@ function getPrintInfo() {
         var data = JSON.parse(this.responseText);
 
         var printInfoDiv = document.getElementById('print-info');
-        
+
 
         if (data.code == '201') {
           // 更新页面上的打印信息
           printInfoDiv.innerHTML = '';
           printInfoDiv.innerHTML = "当前打印机:" + printerName + "<br>";
-          
+
           for (var i = 0; i < data.data.length; i++) {
             var p = document.createElement('p');
             p.innerText = data.data[i];
             printInfoDiv.appendChild(p);
           }
-          if(data.data.length==0){
+          if (data.data.length == 0) {
             var p = document.createElement('p');
             p.innerText = "当前打印机没有需要等待的文件哦~";
             printInfoDiv.appendChild(p);
@@ -68,7 +68,7 @@ function getPrintInfo() {
         }
       } else {
         var printInfoDiv = document.getElementById('print-info');
-        printInfoDiv.innerHTML = '请求失败，请稍重试..' ;
+        printInfoDiv.innerHTML = '请求失败，请稍重试..';
       }
     }
   };
@@ -121,7 +121,7 @@ function deleteFile(uuid) {
 
 
 
-const selectedFiles = [];
+
 function fetchUserFiles() {
   fetch('/api/get_user_files', { credentials: 'include' })
     .then(response => response.json())
@@ -234,7 +234,7 @@ async function getPrinterList() {
 async function getDefaultPrinter() {
   const response = await fetch('/api-v2/get-default-printer');
   const data = await response.json();
-  
+
   // 当前选择的打印机
   printerName = data.data;
   return data.data;
@@ -264,8 +264,169 @@ async function displayPrinterList() {
 }
 
 
-function changePrinter(){
+function changePrinter() {
   const printerListContainer = document.querySelector('#printer-list');
   const selectedPrinter = printerListContainer.value;
   printerName = selectedPrinter;
+}
+
+// 退出登录
+
+function log_out() {
+  mdui.confirm('确认要退出登录吗？', '提示', function() {
+    run_log_out();
+  });
+}
+
+
+async function run_log_out() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', '/api/logout');
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200) {
+        var data = JSON.parse(xhr.responseText);
+        var out_str = data['info'];
+        var title_str = '<font color="green">退出登录成功</font>';
+        mdui.alert(out_str, title_str, function () {  
+          
+        });
+        
+        //等待3秒后自动刷新页面
+        setTimeout(function () {
+          window.location.reload(); // 刷新页面
+        }, 3000);
+        
+      } else {
+        var title_str = '<font color="red">退出登录失败</font>';
+        mdui.alert('<font color="red">退出登录失败</font>', title_str, function () { });
+      }
+    }
+  };
+  xhr.send();
+}
+
+
+// 获得用户权限等级
+function get_user_level() {
+  const xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      const data = JSON.parse(xhr.responseText);
+      document.getElementById('user-permission-level').innerText = data['permission'];
+    }
+  };
+  xhr.open('GET', '/api/get_permission');
+  xhr.send();
+}
+// 获得用户权限等级
+
+
+//获得用户打印数量
+function get_user_print_num() {
+  const xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      const data = JSON.parse(xhr.responseText);
+      document.getElementById('user-print-num').innerText = data['data'];
+    }
+  };
+  xhr.open('GET', '/api/get_print_num');
+  xhr.send();
+}
+//
+
+
+// 切换用户
+function switch_user(){
+  // 显示设置用户名的对话框
+  var dialog = new mdui.Dialog('#username-dialog', { modal: true });
+  dialog.open();
+}
+
+function switch_user_on_click(){
+  document.getElementById('set-username-btn').addEventListener('click', function() {
+    var username = document.getElementById('username-input').value;
+    if (username) {
+      // 设置cookie
+      document.cookie = "dayi-cookie-for-uploads=" + encodeURIComponent(username) + "; path=/";
+      var dialog = new mdui.Dialog('#username-dialog', { modal: true });
+      dialog.close();
+      location.reload();
+    }
+  });
+  
+}
+
+// function switch_user_on_click(){
+//   document.getElementById('set-username-btn').addEventListener('click', function() {
+//     var username = document.getElementById('username-input').value;
+//     if (username) {
+//       // 发送登录请求
+//       var xhr = new XMLHttpRequest();
+//       xhr.open('GET', '/api/login/' + encodeURIComponent(username));
+//       xhr.setRequestHeader('Content-Type', 'application/json');
+//       xhr.onreadystatechange = function() {
+//         if (xhr.readyState === 4) {
+//           if (xhr.status === 200) {
+//             var data = JSON.parse(xhr.responseText);
+//             if (data.code === 201) {
+//               // 显示用户信息
+//               var user_info = data.user_info;
+//               var dialog = new mdui.Dialog('#login-success-dialog', { modal: true });
+//               document.getElementById('user-name-info').innerText = user_info.name;
+//               document.getElementById('user-permission-info').innerText = user_info.permission;
+//               dialog.open();
+//               // 设置cookie
+//               document.cookie = "dayi-cookie-for-uploads=" + encodeURIComponent(user_info.user_name) + "; path=/";
+//               // 刷新页面
+//               location.reload();
+//             } else {
+//               mdui.alert(data.info, '登录失败', function() {});
+//             }
+//           } else {
+//             mdui.alert('服务器错误，登录失败', '登录失败', function() {});
+//           }
+//         }
+//       };
+//       xhr.send();
+//     }
+//   });
+// }
+
+
+
+
+
+// 弹出授权对话框
+function showGrantDialog() {
+  var dialog = new mdui.Dialog('#grant-dialog');
+  dialog.open();
+}
+
+// 授权操作
+function grantPermission() {
+  // 获取授权用户名和权限等级
+  var targetUser = document.getElementById('target_user').value.trim();
+  var permission = parseInt(document.getElementById('permission').value.trim());
+
+  // 发送授权请求
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '/api/grant_permission');
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200) {
+        var data = JSON.parse(xhr.responseText);
+        if (data.code === 201) {
+          mdui.alert(data.info, '授权成功', function() {});
+        } else {
+          mdui.alert(data.info, '授权失败', function() {});
+        }
+      } else {
+        mdui.alert('服务器错误，授权失败', '授权失败', function() {});
+      }
+    }
+  };
+  xhr.send(JSON.stringify({ target_user: targetUser, permission: permission }));
 }

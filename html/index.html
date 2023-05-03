@@ -49,6 +49,8 @@
     <li class="mdui-list-item mdui-ripple">
       <i class="mdui-list-item-icon mdui-icon material-icons">error</i>
       <div class="mdui-list-item-content">当前登录用户: <span id="user-name"></span> <br>
+        当前用户权限等级: <span id="user-permission-level"></span> <br>
+        当前用户打印数量: <span id="user-print-num"></span><br>
         请注意，该用户名同时作为秘钥使用，如果泄露，他人可以删除/下载您的文件<br>
         <font color="green">登录信息存储在:<b>浏览器</b>中,并与域名绑定,也就是cookie</font><br>
       </div>
@@ -71,13 +73,25 @@
         </ul>
         <br>
         <ul class="mdui-collapse-item-body mdui-list mdui-list-dense">
-          <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" id="logout-button"
-            style="width: 150px;">退出登录</button>
+          <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" id="logout-button" style="width: 150px;" onclick="log_out()">退出登录</button>
         </ul>
+        
+        <br>
+        <ul class="mdui-collapse-item-body mdui-list mdui-list-dense">
+          <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" id="logout-button" style="width: 150px;" onclick="switch_user()">切换用户</button>
+        </ul>
+
+        <br>
+        <ul class="mdui-collapse-item-body mdui-list mdui-list-dense">
+          <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" id="logout-button" style="width: 150px;" onclick="showGrantDialog()">授予权限</button>
+        </ul>
+
       </li>
+     
       </li>
     </ul>
   </div>
+  <!-- 管理菜单 -->
 
 
 
@@ -130,6 +144,41 @@
         <div id="progress-bar" style="background-color: #4CAF50; height: 50px;
             width: 0%;"></div>
       </div>
+
+      <!-- 设置用户名，切换用户 -->
+      <div class="mdui-dialog" id="username-dialog">
+        <div class="mdui-dialog-title">设置用户名</div>
+        <div class="mdui-dialog-content">
+          <div class="mdui-textfield">
+            <label class="mdui-textfield-label">用户名</label>
+            <input class="mdui-textfield-input" type="text" id="username-input">
+          </div>
+        </div>
+        <div class="mdui-dialog-actions">
+          <button class="mdui-btn mdui-ripple" mdui-dialog-close>取消</button>
+          <button class="mdui-btn mdui-ripple" id="set-username-btn" onclick="switch_user_on_click()">确定</button>
+        </div>
+      </div>
+
+      <!-- 权限授予 -->
+      <!-- 弹出框  -->
+<div class="mdui-dialog" id="grant-dialog">
+  <div class="mdui-dialog-title">授权用户</div>
+  <div class="mdui-dialog-content">
+    <div class="mdui-textfield">
+      <label class="mdui-textfield-label">授权用户名</label>
+      <input class="mdui-textfield-input" type="text" id="target_user">
+    </div>
+    <div class="mdui-textfield">
+      <label class="mdui-textfield-label">权限等级</label>
+      <input class="mdui-textfield-input" type="number" id="permission">
+    </div>
+  </div>
+  <div class="mdui-dialog-actions">
+    <button class="mdui-btn mdui-ripple" mdui-dialog-confirm onclick="grantPermission()">确认</button>
+    <button class="mdui-btn mdui-ripple" mdui-dialog-cancel>取消</button>
+  </div>
+</div>
 
 
       <!-- 文件列表 -->
@@ -292,6 +341,9 @@
             fetchUserFiles()
 
             displayPrinterList();
+            get_user_level();//显示用户等级
+            get_user_print_num()//显示用户打印次数
+            
           }
           //上传文件函数
           function uploadFile(formData) {
@@ -394,6 +446,13 @@
     <!-- 文件管理: -->
     <!-- 文件管理: -->
 
+    <!-- 获得打印机列表 -->
+      <!-- <button onclick="displayPrinterList()">获取打印机列表</button> -->
+      <div>
+        <label for="printer-list" >打印机：</label>
+        <select id="printer-list" onchange="changePrinter()"></select>
+      </div>
+      <!-- 获得打印机列表 -->
     <!-- 文件选择 -->
     <div class="mdui-container">
       <div class="mdui-textfield">
@@ -449,13 +508,7 @@
       </div>
 
 
-      <!-- 获得打印机列表 -->
-      <!-- <button onclick="displayPrinterList()">获取打印机列表</button> -->
-      <div>
-        <label for="printer-list" >打印机：</label>
-        <select id="printer-list" onchange="changePrinter()"></select>
-      </div>
-      <!-- 获得打印机列表 -->
+      
 
       <!-- 服务器实时状态 -->
       <div class="mdui-container Custom-class-1" style="padding-top:50px;">
@@ -498,11 +551,28 @@
 
         // 表单提交
         function submitForm(event) {
+          //如果没有选择文件:
+          
           document.getElementById('submitButton').disabled = true;
           document.getElementById('feedbackText').textContent = '请稍候...';
           event.preventDefault();
+
+          if(selectedUUID == ""){
+            var out_str = "请先选择文件";
+            var title_str = '<font color="green">你没选文件啦</font>';
+            mdui.alert(out_str, title_str, function () {  
+              
+            });
+            document.getElementById('feedbackText').textContent = '';
+            document.getElementById('submitButton').disabled = false;
+            return;
+          }
+
+          
           const form = document.getElementById('myForm');
           const formData = new FormData(form);
+
+          
 
           const jsonData = {};
           for (const [key, value] of formData.entries()) {
