@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Manager</title>
+</head>
+<body>
+  <h1>User Manager</h1>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Permission</th>
+        <th>Name</th>
+        <th>Student Number</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Here we will add dynamic rows later -->
+    </tbody>
+  </table>
+  
+  <script>
+    // Fetch user data and create table rows
+    fetch('/api/user_management/get_user_list')
+      .then(response => response.json())
+      .then(users => {
+        const tbody = document.querySelector('tbody');
+        for (const user of users) {
+          const tr = document.createElement('tr');
+          const tdUsername = document.createElement('td');
+          tdUsername.textContent = user.user_name;
+          tr.appendChild(tdUsername);
+          const tdPermission = document.createElement('td');
+          tdPermission.textContent = user.permission;
+          tr.appendChild(tdPermission);
+          const tdName = document.createElement('td');
+          tdName.textContent = user.name;
+          tr.appendChild(tdName);
+          const tdStuNumber = document.createElement('td');
+          tdStuNumber.textContent = user.stu_number;
+          tr.appendChild(tdStuNumber);
+          const tdAction = document.createElement('td');
+          const btnEdit = document.createElement('button');
+          btnEdit.textContent = 'Edit';
+          btnEdit.addEventListener('click', () => {
+            // Handle edit button click
+          });
+          tdAction.appendChild(btnEdit);
+          const btnDelete = document.createElement('button');
+          btnDelete.textContent = 'Delete';
+          btnDelete.addEventListener('click', () => {
+            // Handle delete button click
+          });
+          tdAction.appendChild(btnDelete);
+          tr.appendChild(tdAction);
+          tbody.appendChild(tr);
+        }
+      })
+      .catch(error => console.error(error));
+  </script>
+  <script>
+    async function grantPermission(userName, targetUser, permissionLevel) {
+      const response = await fetch('/api/grant_permission', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userName: userName,
+          targetUser: targetUser,
+          permissionLevel: permissionLevel
+        })
+      });
+      const result = await response.json();
+      if (result.code === 200) {
+        console.log(result.info);
+        return true;
+      } else {
+        console.error(result.info);
+        return false;
+      }
+    }
+  </script>
+</body>
+</html>
+
+
+
+
+

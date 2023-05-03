@@ -5,7 +5,8 @@ const sql_table_1 = `CREATE TABLE IF NOT EXISTS users (
   permission INTEGER NOT NULL,
   name TEXT NULL,
   stu_number INTEGER NULL,
-  json JSON NULL
+  json JSON NULL,
+  permission_source TEXT NULL
 )`;
 
 const sql_table_2 = `CREATE TABLE IF NOT EXISTS files (
@@ -25,9 +26,25 @@ const sql_table_3 = `CREATE TABLE IF NOT EXISTS mp3_players (
   json JSON NULL
 )`;
 
+// 打印统计表
+const sql_table_4 = `CREATE TABLE IF NOT EXISTS print_history (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_name TEXT NOT NULL,
+  printer_id INTEGER NOT NULL,
+  print_time DATETIME NOT NULL,
+  print_file_name TEXT NOT NULL,
+  print_file_size REAL NOT NULL,
+  num_pages INTEGER NOT NULL,
+  num_copies INTEGER NOT NULL,
+  color_mode TEXT NOT NULL
+)`;
+
+
+
 exports.sql_table_1 = sql_table_1;
 exports.sql_table_2 = sql_table_2;
 exports.sql_table_3 = sql_table_3;
+exports.sql_table_4 = sql_table_4;
 
 
 

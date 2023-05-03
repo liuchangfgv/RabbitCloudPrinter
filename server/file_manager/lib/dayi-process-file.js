@@ -1,9 +1,10 @@
+const fs = require('fs')
+const path = require('path')
 
 const dayi_user_manger = require('./dayi-user')
+const logger = require('./log_it');
 const config = require('./dayi-config')
-const fs = require('fs')
 const sql = require('./mysql-lib')
-const path = require('path')
 const cute_uuid = require('./cute-uuid')
 
 
@@ -25,10 +26,10 @@ async function process_file(res,req,next){
 
   user_name = user_cookie;
 
-  console.log('[dayi-info]用户:'+user_name)
-  console.log('[dayi-info]上传文件名:'+upload_file_name)
-  console.log('[dayi-info]上传文件临时路径:'+upload_file_path)
-  console.log('[dayi-info]上传文件大小:'+upload_file_size+'kb')
+  logger.info('[dayi-info]用户:'+user_name)
+  logger.info('[dayi-info]上传文件名:'+upload_file_name)
+  logger.info('[dayi-info]上传文件临时路径:'+upload_file_path)
+  logger.info('[dayi-info]上传文件大小:'+upload_file_size+'kb')
 
   // 保存文件到用户目录
   const userDir = path.join(__dirname, '../upload', user_name);
@@ -49,9 +50,9 @@ async function process_file(res,req,next){
 
   // Remove temporary file
   // fs.unlinkSync(upload_file_path);
-  console.log(`[dayi-info]新文件名: ${newFileName}`)
-  console.log('[dayi-info]用户目录:'+user_name)
-  console.log('[dayi-info]上传文件路径:'+destFilePath)
+  logger.info(`[dayi-info]新文件名: ${newFileName}`)
+  logger.info('[dayi-info]用户目录:'+user_name)
+  logger.info('[dayi-info]上传文件路径:'+destFilePath)
 
   //插入数据库
   const file_uuid = cute_uuid.uuid_cute('');

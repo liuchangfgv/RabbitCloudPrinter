@@ -2,22 +2,19 @@
 
 var the_config = require('./dayi-config');
 const mysql_lib = require('./mysql-lib');
+const logger = require('./log_it');
 
 const cookie_key = the_config.cookie_key; //COOKIE KEY 
 
 async function get_user_name(req, res, next) {
-
-
   res_info = {code: 201,info:'success',data: {username: ''}};
   const cookie = req.cookies[cookie_key];
   if (cookie) {
-
     check_user_is_valid = await mysql_lib.dayi_query_user(cookie)
-    if(!upload_file_user){
+    if(!check_user_is_valid){
       res_info = {code: 411,info: '用户不合法，非法用户'}
       return res.json(res_info);
     }
-    
     res_info['code'] = 201;
     res_info['data']['username'] = cookie['username']
   } else {

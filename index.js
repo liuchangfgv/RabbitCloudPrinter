@@ -15,7 +15,7 @@ const pythonPaths = ['/api-v2/*', '/'];
 
 // 反向代理 /api 和 / 到本地主机
 const localHost = 'http://localhost:3000'; // 本地主机地址
-const localPaths = ['/api/', '/node-index'];
+const localPaths = ['/api/','/inside_api/', '/node-index'];
 
 // 创建服务器实例
 const server = http.createServer((req, res) => {
@@ -62,6 +62,16 @@ const server = http.createServer((req, res) => {
       res.end(data);
     });
     return;
+  }
+
+  if(req.url === '/user_manger.html'){
+    fs.readFile('html/user_manger.html', (err, data) => {
+      if (err) { res.writeHead(500, { 'Content-Type': 'text/plain' }); res.end('Error reading index.html file\n'); return; }
+      res.writeHead(200, { 'Content-Type': 'text/html' });
+      res.end(data);
+    });
+    return;
+    
   }
 
   // 如果请求路径不匹配任何代理目标，则返回 404 错误

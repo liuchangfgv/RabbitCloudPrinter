@@ -2,20 +2,10 @@ const express = require('express');
 const https = require('https');
 const http = require('http');
 const fs = require('fs')
+const path = require('path')
 const app = express();
 const cookieParser = require('cookie-parser');
 const multer  = require('multer')
-
-const upload = multer({ //处理上传文件信息
-  dest: 'upload-tmp/',
-  fileFilter(req, file, callback) {
-    file.originalname =Buffer.from(file.originalname, 'latin1').toString('utf8');
-    callback(null, true);
-  },
-})
-
-
-
 
 const server_port  = 3000;
 
@@ -29,22 +19,18 @@ var dayi_process_file = require('./lib/dayi-process-file')//处理上传文件
 const router = require('./router'); // Importing router from router.js
 
 
-
-
-
-// 插件加载
-const dayiFileUploadMiddleware = require('./plugins/api_file_upload');
-
-// API-upload-file
-app.post('/api/file_upload', upload.single('file'), cookieParser(), dayiFileUploadMiddleware, (req, res, next) => {});
-
-
-
-
-
-
 app.use(cookieParser());
 app.use('/', router);
+
+//自动加载插件
+const pluginsDir = path.join(__dirname, 'plugins');
+fs.readdirSync(pluginsDir).forEach(file => {
+  const pluginPath = path.join(pluginsDir, file);
+  const plugin = require(pluginPath);
+  app.use(plugin);
+  console.log(`[${new Date().toLocaleString()}] - INFO - Loaded Plugins：${file}`);
+});
+
 
 app.listen(server_port, () => {
   console.log('http://0.0.0.0:'+server_port);

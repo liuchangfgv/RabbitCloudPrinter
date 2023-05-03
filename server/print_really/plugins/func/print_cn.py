@@ -37,7 +37,7 @@ def print_file(filename,printer):
 
 
 if __name__ == "__main__":
-    print("------兔子云印-----","<br>")
+    print("<br>\n------兔子云印-----","<br>")
     print("[print]当前的默认打印机: ", win32print.GetDefaultPrinter(),"<br>")
     lenth=len(sys.argv)
     if(lenth==1):

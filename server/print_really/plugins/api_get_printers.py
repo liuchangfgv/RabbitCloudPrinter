@@ -19,8 +19,6 @@ def register_plugin(app):
     printer_list = []
     for printer in printers:
         printer_name = printer[1]
-        
-        printer_status = win32print.GetPrinter(printer_name, 2)['Status']
         printer_list.append(printer_name)
     response_data = {
         "code": 201,

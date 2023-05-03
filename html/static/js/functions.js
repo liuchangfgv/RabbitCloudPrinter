@@ -120,7 +120,7 @@ function fetchUserFiles() {
           const files = data.data
           files.forEach(file => {
           const row = document.createElement('tr')
-          
+
           //文件大小
           const sizeCell = document.createElement('td')
           sizeCell.innerText = formatFileSize(file.file_size)
@@ -128,14 +128,14 @@ function fetchUserFiles() {
           // //文件路径
           // const pathCell = document.createElement('td')
           // pathCell.innerText = file.file_path
-          
+
           // 文件UUID
           const uuidCell = document.createElement('td')
           uuidCell.innerText = file.uuid
 
           //文件序号
           const indexCell = document.createElement('td')
-          indexCell.innerText = index + 1 // <-- 添加序号
+          indexCell.innerText = index + 1  // <-- 添加序号
 
           //文件选择
           const selected_file_cell = document.createElement('td')
@@ -149,14 +149,14 @@ function fetchUserFiles() {
             selectedFilePath = file.file_path
             //显示当前的UUID
             document.getElementById('selected-file-uuid').innerText =
-            "您选择的文件UUID为:"+
-                selectedUUID + '\n文件名、文件路径:' + selectedFilePath;
+                '您选择的文件UUID为:' + selectedUUID +
+                '\n文件名、文件路径:' + selectedFilePath;
             console.log(selectedUUID)
-            
+
             // 高亮显示该行
-  const rows = document.querySelectorAll('#file-list tr')
-  rows.forEach(row => row.classList.remove('selected'))
-  row.classList.add('selected')
+            const rows = document.querySelectorAll('#file-list tr')
+            rows.forEach(row => row.classList.remove('selected'))
+            row.classList.add('selected')
           })
           selected_file_cell.classList.add('selected')
 
@@ -176,26 +176,26 @@ function fetchUserFiles() {
           filenameCell.innerText = file.file_name
 
           // ...
-//下载按钮
-const downloadCell = document.createElement('td')
-const downloadBtn = document.createElement('button')
-downloadBtn.innerText = '下载'
-downloadCell.appendChild(downloadBtn) // <-- 添加下载按钮
-downloadBtn.classList.add('btn', 'btn-success')
-downloadBtn.addEventListener('click', () => {downloadFile(file.uuid)})
-row.appendChild(downloadCell)
-// ...
+          //下载按钮
+          const downloadCell = document.createElement('td')
+          const downloadBtn = document.createElement('button')
+          downloadBtn.innerText = '下载'
+          downloadCell.appendChild(downloadBtn)  // <-- 添加下载按钮
+          downloadBtn.classList.add('btn', 'btn-success')
+          downloadBtn.addEventListener('click', () => {downloadFile(file.uuid)})
+          row.appendChild(downloadCell)
+          // ...
 
-row.appendChild(indexCell)//序号
+          row.appendChild(indexCell)  //序号
 
           row.appendChild(filenameCell)
           row.appendChild(sizeCell)
-          //row.appendChild(pathCell)
+          // row.appendChild(pathCell)
           row.appendChild(uuidCell)
           row.appendChild(selected_file_cell)
           row.appendChild(downloadCell)
           row.appendChild(deleteCell)
-          
+
           fileList.appendChild(row)
           })
         } else if (data.code == 401) {
