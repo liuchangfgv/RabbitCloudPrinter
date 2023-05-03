@@ -24,7 +24,7 @@ def print_file(filepath,username = "what",printerId = -1):
     async def runner(filepath,username,printerId):
         await main(filepath,username,printerId)
     # 执行打印命令
-    run_command = "pdm run ./plugins/func/print_cn.py " + filepath
+    run_command = 'pdm run ./plugins/func/print_cn.py \"{}\"'.format(filepath)
     ex = os.popen(run_command)
     extext = ex.read()
     ex.close()

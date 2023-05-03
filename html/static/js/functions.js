@@ -20,23 +20,23 @@ function formatFileSize(size) {
 function checkServerStatus() {
   const st = document.getElementById('node-status')
   fetch('/api/test')
-      .then(response => response.json())
-      .then(data => {
-        if (data.code == 201) {
-          st.innerText = '文件服务器运行正常 √';
-        } else {
-          st.innerText = '文件服务器运行异常 ×';
-        }
-      })
-      .catch(error => {
-        st.innerText = '请求服务器出错 ×，文件服务器运行异常 ×';
-      });
+    .then(response => response.json())
+    .then(data => {
+      if (data.code == 201) {
+        st.innerText = '文件服务器运行正常 √';
+      } else {
+        st.innerText = '文件服务器运行异常 ×';
+      }
+    })
+    .catch(error => {
+      st.innerText = '请求服务器出错 ×，文件服务器运行异常 ×';
+    });
 }
 
 
 function getPrintInfo() {
   var xhr = new XMLHttpRequest();
-  xhr.onreadystatechange = function() {
+  xhr.onreadystatechange = function () {
     if (this.readyState == 4) {
       if (this.status == 200) {
         var data = JSON.parse(this.responseText);
@@ -52,7 +52,7 @@ function getPrintInfo() {
         } else {
           var printInfoDiv = document.getElementById('print-info');
           printInfoDiv.innerHTML =
-              '请求出现错误，服务器可能出现错误，请稍重试..';
+            '请求出现错误，服务器可能出现错误，请稍重试..';
         }
       } else {
         var printInfoDiv = document.getElementById('print-info');
@@ -61,7 +61,7 @@ function getPrintInfo() {
       }
     }
   };
-  xhr.onerror = function() {
+  xhr.onerror = function () {
     var printInfoDiv = document.getElementById('print-info');
     printInfoDiv.innerHTML = '请求出现错误，服务器可能出现错误，请稍重试..';
   };
@@ -73,15 +73,15 @@ function getPrintInfo() {
 function getCurrentTime() {
   const timeDiv = document.getElementById('dayi-time');
   fetch('./api-v2/time')
-      .then(response => response.json())
-      .then(data => {
-        const time = data.data[0];
-        timeDiv.innerText = time;
-      })
-      .catch(error => {
-        console.error(error);
-        timeDiv.innerText = '后端服务器未正常响应实时时间';
-      });
+    .then(response => response.json())
+    .then(data => {
+      const time = data.data[0];
+      timeDiv.innerText = time;
+    })
+    .catch(error => {
+      console.error(error);
+      timeDiv.innerText = '后端服务器未正常响应实时时间';
+    });
 }
 
 
@@ -90,35 +90,35 @@ function deleteFile(uuid) {
   if (!confirm('确定要删除该文件吗？')) {
     return
   }
-  fetch('/api/delete_file/' + uuid, {credentials: 'include'})
-      .then(response => response.json())
-      .then(data => {
-        if (data.code == 201) {
-          fetchUserFiles()
-        } else if (data.code == 401) {
-          console.log('[dayi-error]错误')
-          console.log(data)
-          // window.location.replace('/login.html')
-        } else {
-          alert(data.info)
-        }
-      })
-      .catch(error => console.error(error))
+  fetch('/api/delete_file/' + uuid, { credentials: 'include' })
+    .then(response => response.json())
+    .then(data => {
+      if (data.code == 201) {
+        fetchUserFiles()
+      } else if (data.code == 401) {
+        console.log('[dayi-error]错误')
+        console.log(data)
+        // window.location.replace('/login.html')
+      } else {
+        alert(data.info)
+      }
+    })
+    .catch(error => console.error(error))
 }
 
 
 
 const selectedFiles = [];
 function fetchUserFiles() {
-  fetch('/api/get_user_files', {credentials: 'include'})
-      .then(response => response.json())
-      .then(data => {
-        var index = 0;
-        if (data.code == 201) {
-          const fileList = document.getElementById('file-list')
-          fileList.innerHTML = ''
-          const files = data.data
-          files.forEach(file => {
+  fetch('/api/get_user_files', { credentials: 'include' })
+    .then(response => response.json())
+    .then(data => {
+      var index = 0;
+      if (data.code == 201) {
+        const fileList = document.getElementById('file-list')
+        fileList.innerHTML = ''
+        const files = data.data
+        files.forEach(file => {
           const row = document.createElement('tr')
 
           //文件大小
@@ -149,8 +149,8 @@ function fetchUserFiles() {
             selectedFilePath = file.file_path
             //显示当前的UUID
             document.getElementById('selected-file-uuid').innerText =
-                '您选择的文件UUID为:' + selectedUUID +
-                '\n文件名、文件路径:' + selectedFilePath;
+              '您选择的文件UUID为:' + selectedUUID +
+              '\n文件名、文件路径:' + selectedFilePath;
             console.log(selectedUUID)
 
             // 高亮显示该行
@@ -167,7 +167,7 @@ function fetchUserFiles() {
           const deleteBtn = document.createElement('button')
           deleteBtn.innerText = '删除'
           deleteBtn.classList.add('btn', 'btn-danger')
-          deleteBtn.addEventListener('click', () => {deleteFile(file.uuid)})
+          deleteBtn.addEventListener('click', () => { deleteFile(file.uuid) })
           deleteCell.appendChild(deleteBtn)
 
 
@@ -182,7 +182,7 @@ function fetchUserFiles() {
           downloadBtn.innerText = '下载'
           downloadCell.appendChild(downloadBtn)  // <-- 添加下载按钮
           downloadBtn.classList.add('btn', 'btn-success')
-          downloadBtn.addEventListener('click', () => {downloadFile(file.uuid)})
+          downloadBtn.addEventListener('click', () => { downloadFile(file.uuid) })
           row.appendChild(downloadCell)
           // ...
 
@@ -197,14 +197,49 @@ function fetchUserFiles() {
           row.appendChild(deleteCell)
 
           fileList.appendChild(row)
-          })
-        } else if (data.code == 401) {
-          console.log('[dayi-error]用户未登录')
-          // 用户未登录，跳转到登录页面
-          // window.location.replace('/login.html')
-        } else {
-          alert(data.info)
-        }
-      })
-      .catch(error => console.error(error))
+        })
+      } else if (data.code == 401) {
+        console.log('[dayi-error]用户未登录')
+        // 用户未登录，跳转到登录页面
+        // window.location.replace('/login.html')
+      } else {
+        alert(data.info)
+      }
+    })
+    .catch(error => console.error(error))
 }
+
+//获得打印机列表
+async function getPrinterList() {
+  const response = await fetch('/api-v2/get-printers');
+  const data = await response.json();
+  return data.data;
+}
+
+//默认打印机
+async function getDefaultPrinter() {
+  const response = await fetch('/api-v2/get-default-printer');
+  const data = await response.json();
+  return data.data;
+}
+
+async function displayPrinterList() {
+  const printers = await getPrinterList();
+  const defaultPrinter = await getDefaultPrinter();
+  const printerListContainer = document.querySelector('#printer-list');
+  printers.forEach((printer) => {
+    const option = document.createElement('option');
+    option.value = printer;
+    option.text = printer;
+    if (printer === defaultPrinter) {
+      option.selected = true;
+      const defaultPrinterLabel = document.createElement('label');
+      defaultPrinterLabel.innerHTML = '（默认打印机）';
+      printerListContainer.appendChild(defaultPrinterLabel);
+    }
+    printerListContainer.appendChild(option);
+  });
+}
+
+
+

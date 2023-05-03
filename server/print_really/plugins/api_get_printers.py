@@ -27,6 +27,16 @@ def register_plugin(app):
     }
     return jsonify(response_data)
 
+  @app.route(AUTH_key+"/api-v2/get-default-printer", methods=['GET'])
+  def get_printers():
+    printer = win32print.GetDefaultPrinter()
+    response_data = {
+        "code": 201,
+        "info": "获取默认打印机成功",
+        "data": printer
+    }
+    return jsonify(response_data)
+
 
 #加载插件
 def load_plugin(app):
