@@ -7,7 +7,7 @@ const app = express();
 const cookieParser = require('cookie-parser');
 const multer  = require('multer')
 
-const server_port  = 3000;
+const server_port  = 7072;
 
 // 自写lib
 const mysql_lib = require('./lib/mysql-lib');

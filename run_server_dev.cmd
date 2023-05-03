@@ -17,7 +17,7 @@ start nodemon index.js
 
 
 @REM for debug
-start http://localhost:8080
+start http://localhost:7070
 
 echo Starting index.js...
 cd ..\..

@@ -297,6 +297,6 @@ if __name__ == '__main__':
 
     load_plugins() #加载插件
     
-    app.run("0.0.0.0","5050",debug=True)
+    app.run("0.0.0.0","7071",debug=True)
 
     

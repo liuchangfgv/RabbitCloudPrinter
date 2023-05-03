@@ -6,15 +6,15 @@ const path = require('path');
 
 // 创建代理服务器实例
 const proxy = httpProxy.createProxyServer({});
-const port = 8080;
+const port = 7070;
 
 
 // 反向代理 / 和 /api-v2/ 到 Python 应用程序
-const pythonHost = 'http://127.0.0.1:5050'; // Python 应用程序的主机地址
+const pythonHost = 'http://127.0.0.1:7071'; // Python 应用程序的主机地址
 const pythonPaths = ['/api-v2/*', '/'];
 
 // 反向代理 /api 和 / 到本地主机
-const localHost = 'http://localhost:3000'; // 本地主机地址
+const localHost = 'http://localhost:7072'; // 本地主机地址
 const localPaths = ['/api/','/inside_api/', '/node-index'];
 
 // 创建服务器实例
