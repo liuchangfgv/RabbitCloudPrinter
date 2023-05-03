@@ -13,3 +13,9 @@ def get_server_api_key():
     config = yaml.load(f, Loader=yaml.FullLoader)
     auth_inside_server_api_key = config["auth_inside_server_api_key"]
   return auth_inside_server_api_key
+
+def get_http_api_key():
+  with open(config_path, "r",encoding="utf-8") as f:
+    config = yaml.load(f, Loader=yaml.FullLoader)
+    auth_inside_server_api_key = config["http_auth_key"]
+  return auth_inside_server_api_key

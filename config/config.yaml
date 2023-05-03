@@ -3,3 +3,6 @@ auth_inside_server_api_key: 2f97c665-256b-43a5-a9f1-19ebb890fb76
 
 # 服务器对外的端口号
 server_port : 8080
+
+# HTTP接口的秘钥:
+http_auth_key : 2aaf2b85-95a7-4d28-ace9-553a31b4ccc3
