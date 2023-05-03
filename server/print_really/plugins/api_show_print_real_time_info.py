@@ -32,7 +32,7 @@ def get_info(printer_name):
       pages_printed, total_pages = job["PagesPrinted"], job["TotalPages"]
       if total_pages > 0:
           progress = int(pages_printed / total_pages * 100)
-          res.append( f"作业ID：{job_id}，进度：{progress}%，状态：{job_status}")
+          res.append( f"作业ID：{job_id}，进度：{progress}%  当前页数:{pages_printed} 总页数:{pages_printed}，状态：{job_status}")
           
       else:
           res.append(f"作业ID：{job_id}，进度：未知，状态：{job_status}")
