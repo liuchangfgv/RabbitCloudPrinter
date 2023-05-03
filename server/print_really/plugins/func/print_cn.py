@@ -26,7 +26,7 @@ def print_file(filename,printer):
         print("[print]尝试打开文件:",filename,"<br>")
         open(filename,"r")
         try:
-            print("[print]正在尝试通过windows api 发送打印命令道打印机:",filename,"<br>")
+            print("[print]正在尝试通过windows api 发送打印命令到打印机:",filename,"<br>")
             win32api.ShellExecute(0, "print", filename, None, ".", 0)
             print("[success_owo]成功啦！打印机命令发送成功","<br>")
         except:

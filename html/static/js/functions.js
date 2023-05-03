@@ -1,5 +1,8 @@
 //部分js放在这里
 
+var printerName = "" //当前选择的打印机名字
+
+
 // 下载文件
 function downloadFile(uuid) {
   window.location.href = '/api/download_file/' + uuid;
@@ -34,30 +37,32 @@ function checkServerStatus() {
 }
 
 
+//获得实时打印机信息
 function getPrintInfo() {
   var xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function () {
     if (this.readyState == 4) {
       if (this.status == 200) {
         var data = JSON.parse(this.responseText);
+
+        var printInfoDiv = document.getElementById('print-info');
+        
+
         if (data.code == '201') {
           // 更新页面上的打印信息
-          var printInfoDiv = document.getElementById('print-info');
           printInfoDiv.innerHTML = '';
+          printInfoDiv.innerHTML = "当前打印机:" + printerName + "<br>";
           for (var i = 0; i < data.data.length; i++) {
             var p = document.createElement('p');
             p.innerText = data.data[i];
             printInfoDiv.appendChild(p);
           }
         } else {
-          var printInfoDiv = document.getElementById('print-info');
-          printInfoDiv.innerHTML =
-            '请求出现错误，服务器可能出现错误，请稍重试..';
+          printInfoDiv.innerHTML = '请求出现错误，服务器可能出现错误，请稍重试..';
         }
       } else {
         var printInfoDiv = document.getElementById('print-info');
-        printInfoDiv.innerHTML = '请求失败，请稍重试..';
-        printInfoDiv.innerHTML = '请求出现错误，服务器可能出现错误，请稍重试..';
+        printInfoDiv.innerHTML = '请求失败，请稍重试..' ;
       }
     }
   };
@@ -65,9 +70,11 @@ function getPrintInfo() {
     var printInfoDiv = document.getElementById('print-info');
     printInfoDiv.innerHTML = '请求出现错误，服务器可能出现错误，请稍重试..';
   };
-  xhr.open('GET', '/api-v2/realtime-print-info', true);
+
+  xhr.open('GET', '/api-v2/realtime-print-info?printer_name=' + printerName, true);
   xhr.send();
 }
+
 
 //获得时间
 function getCurrentTime() {
@@ -209,37 +216,49 @@ function fetchUserFiles() {
     .catch(error => console.error(error))
 }
 
-//获得打印机列表
+// 获取打印机列表
 async function getPrinterList() {
   const response = await fetch('/api-v2/get-printers');
   const data = await response.json();
   return data.data;
 }
 
-//默认打印机
+// 获取默认打印机
 async function getDefaultPrinter() {
   const response = await fetch('/api-v2/get-default-printer');
   const data = await response.json();
+  
+  // 当前选择的打印机
+  printerName = data.data;
   return data.data;
 }
 
+// 显示打印机列表
 async function displayPrinterList() {
   const printers = await getPrinterList();
   const defaultPrinter = await getDefaultPrinter();
   const printerListContainer = document.querySelector('#printer-list');
+
+  // 添加其它打印机选项
   printers.forEach((printer) => {
-    const option = document.createElement('option');
-    option.value = printer;
-    option.text = printer;
-    if (printer === defaultPrinter) {
-      option.selected = true;
-      const defaultPrinterLabel = document.createElement('label');
-      defaultPrinterLabel.innerHTML = '（默认打印机）';
-      printerListContainer.appendChild(defaultPrinterLabel);
+    if (printer !== defaultPrinter) {
+      const option = document.createElement('option');
+      option.value = printer;
+      option.text = printer;
+      printerListContainer.appendChild(option);
     }
-    printerListContainer.appendChild(option);
   });
+
+  const defaultOption = document.createElement('option');
+  defaultOption.value = defaultPrinter;
+  defaultOption.text = defaultPrinter;
+  defaultOption.selected = true;
+  printerListContainer.insertBefore(defaultOption, printerListContainer.firstChild);
 }
 
 
-
+function changePrinter(){
+  const printerListContainer = document.querySelector('#printer-list');
+  const selectedPrinter = printerListContainer.value;
+  printerName = selectedPrinter;
+}

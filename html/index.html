@@ -447,6 +447,15 @@
         </label>
       </div>
 
+
+      <!-- 获得打印机列表 -->
+      <button onclick="displayPrinterList()">获取打印机列表</button>
+      <div>
+        <label for="printer-list" >打印机：</label>
+        <select id="printer-list" onchange="changePrinter()"></select>
+      </div>
+      <!-- 获得打印机列表 -->
+
       <!-- 服务器实时状态 -->
       <div class="mdui-container Custom-class-1" style="padding-top:50px;">
         <div class="mdui-textfield">
@@ -550,14 +559,7 @@
         }
       </script>
 
-      <!-- 获得打印机列表 -->
-      <button onclick="getPrinters()">获取打印机列表</button>
-
-      <div>
-        <label for="printer-list">打印机：</label>
-        <select id="printer-list"></select>
-      </div>
-      <!-- 获得打印机列表 -->
+      
 
 
       <!-- 实时打印状态显示 -->

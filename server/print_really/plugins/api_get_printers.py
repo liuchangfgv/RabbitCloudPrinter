@@ -18,7 +18,7 @@ def register_plugin(app):
     printers = win32print.EnumPrinters(win32print.PRINTER_ENUM_LOCAL, None, 1)
     printer_list = []
     for printer in printers:
-        printer_name = printer[1]
+        printer_name = printer[2]
         printer_list.append(printer_name)
     response_data = {
         "code": 201,
@@ -28,12 +28,12 @@ def register_plugin(app):
     return jsonify(response_data)
 
   @app.route(AUTH_key+"/api-v2/get-default-printer", methods=['GET'])
-  def get_printers():
-    printer = win32print.GetDefaultPrinter()
+  def get_printer():
+    device_name = win32print.GetDefaultPrinter()
     response_data = {
         "code": 201,
         "info": "获取默认打印机成功",
-        "data": printer
+        "data": device_name
     }
     return jsonify(response_data)
 
