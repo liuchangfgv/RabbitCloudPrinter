@@ -50,6 +50,7 @@
       <i class="mdui-list-item-icon mdui-icon material-icons">error</i>
       <div class="mdui-list-item-content">当前登录用户: <span id="user-name"></span> <br>
         当前用户权限等级: <span id="user-permission-level"></span> <br>
+        当前用户打印数量: <span id="user-print-num"></span><br>
         请注意，该用户名同时作为秘钥使用，如果泄露，他人可以删除/下载您的文件<br>
         <font color="green">登录信息存储在:<b>浏览器</b>中,并与域名绑定,也就是cookie</font><br>
       </div>
@@ -341,6 +342,7 @@
 
             displayPrinterList();
             get_user_level();//显示用户等级
+            get_user_print_num()//显示用户打印次数
             
           }
           //上传文件函数

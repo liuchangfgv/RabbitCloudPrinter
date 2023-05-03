@@ -321,6 +321,22 @@ function get_user_level() {
 }
 // 获得用户权限等级
 
+
+//获得用户打印数量
+function get_user_print_num() {
+  const xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      const data = JSON.parse(xhr.responseText);
+      document.getElementById('user-print-num').innerText = data['data'];
+    }
+  };
+  xhr.open('GET', '/api/get_print_num');
+  xhr.send();
+}
+//
+
+
 // 切换用户
 function switch_user(){
   // 显示设置用户名的对话框
