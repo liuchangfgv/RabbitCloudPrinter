@@ -65,3 +65,25 @@
 
 1. 运行run_server.cmd
 2. 服务器已经在7070端口运行。
+
+
+# PM2部署
+
+## python服务器
+
+1. 运行 install_server.cmd 
+2. 在`server\print_really`里
+
+```
+pm2 start hi.py --name py_for_printer --interpreter=.venv/bin/python3
+```
+
+3. 在 `server\file_manager` 里
+```bash
+pm2 start index.js
+```
+
+4. 在`根目录`下
+```bash
+pm2 start index.js
+```
