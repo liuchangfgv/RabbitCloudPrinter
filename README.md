@@ -75,7 +75,7 @@
 2. 在`server\print_really`里
 
 ```
-pm2 start hi.py --name py_for_printer --interpreter=.venv/bin/python3
+pm2 start pm2.config.js
 ```
 
 3. 在 `server\file_manager` 里
